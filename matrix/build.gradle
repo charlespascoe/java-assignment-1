@@ -1,0 +1,20 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'matrix.Program'
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    baseName = 'matrix'
+    version =  '0.0.1'
+    manifest {
+        attributes 'Main-Class': 'matrix.Program'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}

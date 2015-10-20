@@ -1,0 +1,20 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'uk.co.cpascoe.caesar_shift_cracker.Program'
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    baseName = 'caesar_shift_cracker'
+    version =  '0.0.1'
+    manifest {
+        attributes 'Main-Class': 'uk.co.cpascoe.caesar_shift_cracker.Program'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
