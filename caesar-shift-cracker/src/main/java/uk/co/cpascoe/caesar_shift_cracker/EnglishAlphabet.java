@@ -1,7 +1,7 @@
 package uk.co.cpascoe.caesar_shift_cracker;
 
 
-public EnglishAlphabet extends Alphabet {
+public class EnglishAlphabet extends Alphabet {
     public EnglishAlphabet() {
         super("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     }
@@ -40,6 +40,6 @@ public EnglishAlphabet extends Alphabet {
             0.002569593147751606,
             0.02226980728051392,
             0.0005995717344753747
-        }
+        };
     }
 }

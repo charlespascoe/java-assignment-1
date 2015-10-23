@@ -34,12 +34,12 @@ public abstract class Alphabet {
      *
      * @param index the index of the character in this alphabet
      */
-    public char getChar(int index) {
+    public char getChar(int index) throws Exception {
         if (index < 0 || index >= this.alphabet.length()) {
             throw new Exception("Array index out of bounds!");
         }
 
-        return this.alphabet[index];
+        return this.alphabet.charAt(index);
     }
 
     /**
@@ -50,7 +50,7 @@ public abstract class Alphabet {
     public String stripToAlphabet(String text) {
         StringBuilder str = new StringBuilder();
 
-        for (char c : text) {
+        for (char c : text.toCharArray()) {
             if (this.alphabet.indexOf((int)c) >= 0) {
                 str.append(c);
             }
@@ -76,14 +76,14 @@ public abstract class Alphabet {
 
         int[] freqs = new int[this.length()];
 
-        for (char c : text) {
+        for (char c : text.toCharArray()) {
             freqs[this.indexOf(c)]++;
         }
 
         double[] probs = new double[freqs.length];
 
         for (int i = 0; i < freqs.length; i++) {
-            probs[i] = (double)freqs[i] / text.length;
+            probs[i] = (double)freqs[i] / text.length();
         }
 
         return probs;
