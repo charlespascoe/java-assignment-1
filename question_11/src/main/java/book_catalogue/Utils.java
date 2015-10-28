@@ -1,13 +1,37 @@
 package book_catalogue;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Arrays;
 
 public class Utils {
-    public static Calendar createCalendar(int year, int month, int dayOfMonth) {
-        Calendar c = new GregorianCalendar();
-        c.set(year, month, dayOfMonth);
-        return c;
+    public static <T> String join(T[] array, String separator) {
+        StringBuilder str = new StringBuilder();
+
+        for (int i = 0; i < array.length; i++) {
+            str.append(array[i]);
+
+            if (i < array.length - 1) {
+                str.append(separator);
+            }
+        }
+
+        return str.toString();
+    }
+
+    public static <T extends Comparable<? super T>> int compareArrays(T[] array1, T[] array2) {
+        int maxLength = array1.length < array2.length ? array1.length : array2.length;
+
+        if (maxLength == 0) return 0;
+
+        for (int i = 0; i < maxLength; i++) {
+            int compareResult = array1[i].compareTo(array2[i]);
+
+            if (compareResult != 0) return compareResult;
+        }
+
+        // The first few elements of the longer array
+        // are equal to the shorter array, so assume the longer array
+        // is 'larger'
+        return array1.length - array2.length;
     }
 }
 

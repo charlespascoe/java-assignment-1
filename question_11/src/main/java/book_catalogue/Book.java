@@ -1,45 +1,58 @@
 package book_catalogue;
 
-import java.util.Calendar;
+import java.util.Arrays;
 
 public class Book implements Comparable<Book> {
     private String title;
-    private String authorFirstName;
-    private String authorSecondName;
-    private Calendar publicationDate;
+    private Author[] authors;
+    private String publisher;
+    private int publicationYear;
 
-    public Book(String title, String authorFirstName, String authorSecondName, Calendar publicationDate) {
+    public Book(String title, Author author, String publisher, int publicationYear) {
+        this(title, new Author[] { author }, publisher, publicationYear);
+    }
+
+    public Book(String title, Author[] authors, String publisher, int publicationYear) {
         this.title = title;
-        this.authorFirstName = authorFirstName;
-        this.authorSecondName = authorSecondName;
-        this.publicationDate = publicationDate;
+        this.authors = Arrays.copyOf(authors, authors.length);
+        this.publisher = publisher;
+        this.publicationYear = publicationYear;
     }
 
     public String getTitle() { return this.title; }
 
-    public String getAuthorFirstName() { return this.authorFirstName; }
+    public Author[] getAuthors() { return Arrays.copyOf(this.authors, this.authors.length); }
 
-    public String getAuthorSecondName() { return this.authorSecondName; }
+    public String getPublisher() { return this.publisher; }
 
-    public String getAuthorFullName() { return this.authorFirstName + " " + this.authorSecondName; }
-
-    public Calendar getPublicationDate() { return (Calendar)this.publicationDate.clone(); }
+    public int getPublicationYear() { return this.publicationYear; }
 
     public int compareTo(Book other) {
-        int yearDiff = this.publicationDate.get(Calendar.YEAR) - other.getPublicationDate().get(Calendar.YEAR);
+        int yearDiff = this.publicationYear - other.getPublicationYear();
 
         if (yearDiff != 0) return yearDiff;
 
-        return this.authorSecondName.compareTo(other.getAuthorSecondName());
+        return Utils.compareArrays(this.authors, other.getAuthors());
     }
 
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
 
-        str.append(this.authorSecondName).append(", ").append(this.authorFirstName.charAt(0)).append(". ");
-        str.append("(").append(this.publicationDate.get(Calendar.YEAR)).append(")");
-        str.append(" \"").append(this.title).append("\"");
+        str.append(Utils.join(Arrays.copyOf(this.authors, this.authors.length - 1), ", "));
+
+        if (str.length() > 0) {
+            if (this.authors.length > 2) {
+                str.append(",");
+            }
+
+            str.append(" and ");
+        }
+
+        str.append(this.authors[this.authors.length - 1]);
+
+        str.append(" (").append(this.publicationYear).append(")");
+        str.append(" \"").append(this.title).append("\", ").append(this.publisher);
 
         return str.toString();
     }
