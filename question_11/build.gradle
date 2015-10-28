@@ -1,0 +1,20 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'book_catalogue.Program'
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    baseName = 'book_calatlogue'
+    version =  '0.0.1'
+    manifest {
+        attributes 'Main-Class': 'book_catalogue.Program'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
