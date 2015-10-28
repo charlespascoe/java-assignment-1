@@ -8,8 +8,8 @@ public class Program {
     public static void main(String[] args) {
         List<Book> books = new ArrayList<Book>();
 
-        books.add(new Book("The Hitchhiker's Guide to the Galaxy", new Author("Douglas", "Adams"), "Megadodo Publications", 1979));
-        books.add(new Book("Applied Cryptography", new Author("Bruce", "Schneier"), "John Wiley & Sons", 1994));
+        books.add(new Book("The Hitchhiker's Guide to the Galaxy", new Author("Douglas", "Adams"), "Megadodo Publications", 1979, BookStatus.AVAILABLE));
+        books.add(new Book("Applied Cryptography", new Author("Bruce", "Schneier"), "John Wiley & Sons", 1994, BookStatus.ON_LOAN));
         books.add(new Book(
             "Introduction to Algorithms (3rd Edition)",
             new Author[] {
@@ -19,7 +19,8 @@ public class Program {
                 new Author("Clifford", "Stein")
             },
             "MIT Press",
-            2009
+            2009,
+            BookStatus.UNAVAILABLE
         ));
 
         Collections.sort(books);
