@@ -1,14 +1,16 @@
 package book_catalogue.query;
 
-public class NotCondition extends Condition {
-    private Condtion condition;
+import book_catalogue.Book;
 
-    public NotCondition(Token righthandToken) {
-        if (!(righthandToken instanceof Condtion)) {
-            // ### Unexpected token type
+public class NotCondition extends Condition {
+    private Condition condition;
+
+    public NotCondition(QueryComponent righthandComponent) {
+        if (!(righthandComponent instanceof Condition)) {
+            // ### Unexpected component type
         }
 
-        this.condition = (Condtion)righthandToken;
+        this.condition = (Condition)righthandComponent;
     }
 
     @Override
