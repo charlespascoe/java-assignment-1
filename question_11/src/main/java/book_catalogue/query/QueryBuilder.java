@@ -7,6 +7,10 @@ import java.util.regex.Matcher;
 import book_catalogue.Utils;
 
 public class QueryBuilder {
+    public static Condition buildQuery(String query) {
+        List<QueryComponent> tokens = QueryBuilder.tokenise(query);
+        return QueryBuilder.buildAbstractSyntaxTree(tokens);
+    }
 
     public static List<QueryComponent> tokenise(String query) {
         // http://stackoverflow.com/questions/366202/regex-for-splitting-a-string-using-space-when-not-surrounded-by-single-or-double
@@ -58,7 +62,7 @@ public class QueryBuilder {
 
                     QueryComponent lefthandComponent = components.get(i - 1);
                     QueryComponent righthandComponent = components.get(i + 1);
-                    QueryComponent result;
+                    QueryComponent result = null;
 
                     switch (st.getValue()) {
                         case "==":
@@ -85,6 +89,9 @@ public class QueryBuilder {
                         case "<=":
                             result = new NumericLessThanOrEqualCondition(lefthandComponent, righthandComponent);
                             break;
+                        default:
+                            // ### Unexpected special token
+                            return null;
                     }
 
                     Utils.spliceIntoList(components, i - 1, i + 1, result);
@@ -122,7 +129,7 @@ public class QueryBuilder {
                 QueryComponent lefthandComponent = components.get(i - 1);
                 QueryComponent righthandComponent = components.get(i + 1);
 
-                Condition result;
+                Condition result = null;
 
                 switch (st.getValue()) {
                     case "and":
