@@ -3,6 +3,8 @@ package book_catalogue;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+import book_catalogue.query.QueryBuilder;
+import book_catalogue.query.Condition;
 
 public class Program {
     public static void main(String[] args) {
@@ -25,9 +27,18 @@ public class Program {
 
         Collections.sort(books);
 
-        for (Book b : books) {
-            System.out.println(b);
+        // for (Book b : books) {
+        //    System.out.println(b);
+        // }
+
+        Condition c = QueryBuilder.buildQuery("title ~~ 'to the' and not (author.first_name == 'douglas' and author.second_name == 'adams')");
+
+        for (Book book : books) {
+            if (c.isMatch(book)) {
+                System.out.println(book);
+            }
         }
+
     }
 }
 
