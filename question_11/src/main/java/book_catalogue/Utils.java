@@ -1,5 +1,7 @@
 package book_catalogue;
 
+import java.util.List;
+import java.util.LinkedList;
 import java.util.Arrays;
 
 public class Utils {
@@ -32,6 +34,20 @@ public class Utils {
         // are equal to the shorter array, so assume the longer array
         // is 'larger'
         return array1.length - array2.length;
+    }
+
+    public static <E> void spliceIntoList(List<E> list, int startIndex, int endIndex, E replacementElement) {
+        LinkedList<E> l = new LinkedList<E>();
+        l.add(replacementElement);
+        Utils.spliceIntoList(list, startIndex, endIndex, l);
+    }
+
+    public static <E> void spliceIntoList(List<E> list, int startIndex, int endIndex, List<E> replacementElements) {
+        for (int i = startIndex; i < endIndex + 1; i++) {
+            list.remove(startIndex);
+        }
+
+        list.addAll(startIndex, replacementElements);
     }
 }
 
