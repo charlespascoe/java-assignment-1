@@ -1,7 +1,7 @@
 package book_catalogue.query;
 
 public class SpecialToken extends Token {
-    public static final String[] SPECIAL_TOKENS = new String[] { "(", ")", "==", "~~", ">", "<", ">=", "<=", "and", "or" };
+    public static final String[] SPECIAL_TOKENS = new String[] { "(", ")", "==", "~~", ">", "<", ">=", "<=", "and", "or", "not" };
 
     public SpecialToken(int startPos, String value) throws QueryParsingException {
         super(startPos, value);
