@@ -5,7 +5,7 @@ public class UnrecognisedFieldException extends QueryParsingException {
         super(
             field.getStartPosition(),
             field.getEndPosition(),
-            "Unregcogised field name: " + field.getValue() + ". Exptecting " + expectedFieldType + " field type"
+            "Unregcogised field name: '" + field.getValue() + "'. Exptecting " + expectedFieldType + " field type"
         );
     }
 }
