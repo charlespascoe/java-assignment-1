@@ -1,12 +1,13 @@
 package book_catalogue.query;
 
 import book_catalogue.Book;
+import book_catalogue.Author;
 
 public abstract class TextCondition extends Condition {
     protected TextToken lefthandToken;
     protected TextToken righthandToken;
 
-    public static final String[] TEXT_FIELDS = new String[] { "title" };
+    public static final String[] TEXT_FIELDS = new String[] { "title", "author.first_name", "author.second_name", "publisher", "status" };
 
     public TextCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) throws QueryParsingException {
         super(lefthandComponent.getStartPosition(), righthandComponent.getEndPosition());
@@ -35,13 +36,31 @@ public abstract class TextCondition extends Condition {
         return false;
     }
 
-    protected String getValue(Book book) {
+    @Override
+    public boolean isMatch(Book book) {
+        String inputValue = this.righthandToken.getValue();
         switch (this.lefthandToken.getValue().toLowerCase()) {
             case "title":
-                return book.getTitle();
+                return this.matchesCondition(book.getTitle(), inputValue);
+            case "author.first_name":
+                for (Author auth : book.getAuthors()) {
+                    if (this.matchesCondition(auth.getFirstName(), inputValue)) return true;
+                }
+                return false;
+            case "author.last_name":
+                for (Author auth : book.getAuthors()) {
+                    if (this.matchesCondition(auth.getSecondName(), inputValue)) return true;
+                }
+                return false;
+            case "publisher":
+                return this.matchesCondition(book.getPublisher(), inputValue);
+            case "status":
+                return this.matchesCondition(book.getStatus().name(), inputValue);
         }
 
-        return "";
+        return false;
     }
+
+    protected abstract boolean matchesCondition(String bookValue, String inputValue);
 }
 

@@ -8,8 +8,8 @@ public class NumericEqualCondition extends NumericCondition {
     }
 
     @Override
-    public boolean isMatch(Book book) {
-        return this.compareTo(book) == 0;
+    protected boolean matchesCondition(int diff) {
+        return diff == 0;
     }
 }
 

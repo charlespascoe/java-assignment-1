@@ -6,6 +6,8 @@ public abstract class NumericCondition extends Condition {
     private TextToken lefthandToken;
     private NumericToken righthandToken;
 
+    public static final String[] NUMERIC_FIELDS = new String[] { "publication_year" };
+
     public NumericCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) throws QueryParsingException {
         super(lefthandComponent.getStartPosition(), righthandComponent.getEndPosition());
 
@@ -25,21 +27,27 @@ public abstract class NumericCondition extends Condition {
         }
     }
 
-    public static boolean isNumericField(String field) {
-        return field.equals("publication_year");
+    public static boolean isNumericField(String text) {
+        for (String field : NumericCondition.NUMERIC_FIELDS) {
+            if (field.equals(text.toLowerCase())) return true;
+        }
+
+        return false;
     }
 
-    protected int compareTo(Book book) {
+    @Override
+    public boolean isMatch(Book book) {
         switch (this.lefthandToken.getValue().toLowerCase()) {
             case "publication_year":
                 int bookValue = book.getPublicationYear();
                 int inputValue = this.righthandToken.getIntValue();
 
-                return bookValue - inputValue;
+                return this.matchesCondition(bookValue - inputValue);
         }
 
-        return 0;
+        return false;
     }
 
+    protected abstract boolean matchesCondition(int diff);
 }
 

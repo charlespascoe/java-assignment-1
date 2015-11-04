@@ -1,15 +1,13 @@
 package book_catalogue.query;
 
-import book_catalogue.Book;
-
 public class TextContainsCondition extends TextCondition {
     public TextContainsCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) throws QueryParsingException {
         super(lefthandComponent, righthandComponent);
     }
 
     @Override
-    public boolean isMatch(Book book) {
-        return this.getValue(book).toLowerCase().contains(righthandToken.getValue().toLowerCase());
+    protected boolean matchesCondition(String bookValue, String inputValue) {
+        return bookValue.toLowerCase().contains(inputValue.toLowerCase());
     }
 }
 
