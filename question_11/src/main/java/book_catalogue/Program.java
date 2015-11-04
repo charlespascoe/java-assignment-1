@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ArrayList;
 import book_catalogue.query.QueryBuilder;
 import book_catalogue.query.Condition;
+import book_catalogue.query.QueryParsingException;
 
 public class Program {
     public static void main(String[] args) {
@@ -31,11 +32,36 @@ public class Program {
         //    System.out.println(b);
         // }
 
-        Condition c = QueryBuilder.buildQuery("title ~~ 'to the' and not (author.first_name == 'douglas' and author.second_name == 'adams')");
+        String query = "title ~~ 'to the' and not (author.first_name == 'douglas' and author.second_name == 'adams')";
+        query = "title ~~ 'to the' and publication_year >= 2009";
 
-        for (Book book : books) {
-            if (c.isMatch(book)) {
-                System.out.println(book);
+        Condition c = null;
+
+        try {
+            c = QueryBuilder.buildQuery(query);
+        } catch (QueryParsingException e) {
+            StringBuilder str = new StringBuilder();
+            str.append(query).append("\n");
+
+            for (int i = 0; i < query.length(); i++) {
+                if (i >= e.getStartPosition() && i <= e.getEndPosition()) {
+                    str.append("^");
+                } else {
+                    str.append(" ");
+                }
+            }
+
+            str.append("\n").append(e.getMessage());
+
+            System.out.println(str);
+
+        }
+
+        if (c != null) {
+            for (Book book : books) {
+                if (c.isMatch(book)) {
+                    System.out.println(book);
+                }
             }
         }
 

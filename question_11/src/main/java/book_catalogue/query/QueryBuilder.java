@@ -7,12 +7,17 @@ import java.util.regex.Matcher;
 import book_catalogue.Utils;
 
 public class QueryBuilder {
-    public static Condition buildQuery(String query) {
+    public static Condition buildQuery(String query) throws QueryParsingException {
         List<QueryComponent> tokens = QueryBuilder.tokenise(query);
+
+        for (QueryComponent qc : tokens) {
+            System.out.println(((Token)qc).getValue());
+        }
+
         return QueryBuilder.buildAbstractSyntaxTree(tokens);
     }
 
-    public static List<QueryComponent> tokenise(String query) {
+    public static List<QueryComponent> tokenise(String query) throws QueryParsingException {
         // http://stackoverflow.com/questions/366202/regex-for-splitting-a-string-using-space-when-not-surrounded-by-single-or-double
         // (Accessed 29/10/2015)
         Pattern regex = Pattern.compile("\\(|\\)|[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
@@ -23,19 +28,19 @@ public class QueryBuilder {
         while (matcher.find()) {
             if (matcher.group(1) != null) {
                 // Double-quoted string
-                tokens.add(new TextToken(matcher.group(1)));
+                tokens.add(new TextToken(matcher.start(1), matcher.group(1)));
             } else if (matcher.group(2) != null) {
                 // Single-quoted string
-                tokens.add(new TextToken(matcher.group(2)));
+                tokens.add(new TextToken(matcher.start(2), matcher.group(2)));
             } else {
                 String text = matcher.group();
 
                 if (SpecialToken.isSpecialToken(text)) {
-                    tokens.add(new SpecialToken(text));
+                    tokens.add(new SpecialToken(matcher.start(), text));
                 } else if (NumericToken.isNumber(text)) {
-                    tokens.add(new NumericToken(text));
+                    tokens.add(new NumericToken(matcher.start(), text));
                 } else {
-                    tokens.add(new TextToken(matcher.group()));
+                    tokens.add(new TextToken(matcher.start(), text));
                 }
             }
         }
@@ -43,7 +48,7 @@ public class QueryBuilder {
         return tokens;
     }
 
-    public static Condition buildAbstractSyntaxTree(List<QueryComponent> components) {
+    public static Condition buildAbstractSyntaxTree(List<QueryComponent> components) throws QueryParsingException {
         QueryBuilder.processBrackets(components);
 
         for (int i = 0; i < components.size(); i++) {
@@ -71,7 +76,7 @@ public class QueryBuilder {
                             } else if (righthandComponent instanceof NumericToken) {
                                 result = new NumericEqualCondition(lefthandComponent, righthandComponent);
                             } else {
-                                // ### Unexpected token type!
+                                throw new UnexpectedQueryComponentException(righthandComponent, "text or number");
                             }
                             break;
                         case "~~":
@@ -89,9 +94,6 @@ public class QueryBuilder {
                         case "<=":
                             result = new NumericLessThanOrEqualCondition(lefthandComponent, righthandComponent);
                             break;
-                        default:
-                            // ### Unexpected special token
-                            return null;
                     }
 
                     Utils.spliceIntoList(components, i - 1, i + 1, result);
@@ -156,7 +158,7 @@ public class QueryBuilder {
         QueryComponent qc = components.get(0);
 
         if (!(qc instanceof Condition)) {
-            // ### Unexpected component type
+            throw new UnexpectedQueryComponentException(qc, "condition");
         }
 
         return (Condition)qc;
@@ -172,7 +174,7 @@ public class QueryBuilder {
             text.equals("<=");
     }
 
-    private static void processBrackets(List<QueryComponent> components) {
+    private static void processBrackets(List<QueryComponent> components) throws QueryParsingException {
         boolean bracketsFound;
 
         do {

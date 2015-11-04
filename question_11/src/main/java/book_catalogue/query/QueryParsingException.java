@@ -1,10 +1,11 @@
 package book_catalogue.query;
 
-public abstract class QueryComponent {
+public class QueryParsingException extends Exception {
     private int startPos;
     private int endPos;
 
-    public QueryComponent(int startPos, int endPos) {
+    public QueryParsingException(int startPos, int endPos, String message) {
+        super(message);
         this.startPos = startPos;
         this.endPos = endPos;
     }
@@ -17,3 +18,4 @@ public abstract class QueryComponent {
         return this.endPos;
     }
 }
+

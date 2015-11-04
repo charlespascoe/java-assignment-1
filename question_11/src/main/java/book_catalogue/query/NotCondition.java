@@ -5,9 +5,12 @@ import book_catalogue.Book;
 public class NotCondition extends Condition {
     private Condition condition;
 
-    public NotCondition(QueryComponent righthandComponent) {
+    public NotCondition(QueryComponent righthandComponent) throws QueryParsingException {
+        // Subtract 4 to include the "not "
+        super(righthandComponent.getStartPosition() - 4, righthandComponent.getEndPosition());
+
         if (!(righthandComponent instanceof Condition)) {
-            // ### Unexpected component type
+            throw new UnexpectedQueryComponentException(righthandComponent, "condition");
         }
 
         this.condition = (Condition)righthandComponent;

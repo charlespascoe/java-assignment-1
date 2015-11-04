@@ -4,13 +4,15 @@ public abstract class LogicalCondition extends Condition {
     protected Condition lefthandCondition;
     protected Condition righthandCondition;
 
-    public LogicalCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) {
+    public LogicalCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) throws QueryParsingException {
+        super(lefthandComponent.getStartPosition(), righthandComponent.getEndPosition());
+
         if (!(lefthandComponent instanceof Condition)) {
-            // ### Unexpected component type
+            throw new UnexpectedQueryComponentException(lefthandComponent, "condition");
         }
 
         if (!(righthandComponent instanceof Condition)) {
-            // ### Unexpected component type
+            throw new UnexpectedQueryComponentException(righthandComponent, "condition");
         }
 
         this.lefthandCondition = (Condition)lefthandComponent;

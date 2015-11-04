@@ -3,7 +3,7 @@ package book_catalogue.query;
 import book_catalogue.Book;
 
 public class LogicalOrCondition extends LogicalCondition {
-    public LogicalOrCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) {
+    public LogicalOrCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) throws QueryParsingException {
         super(lefthandComponent, righthandComponent);
     }
 

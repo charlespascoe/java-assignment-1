@@ -3,7 +3,7 @@ package book_catalogue.query;
 import book_catalogue.Book;
 
 public class TextContainsCondition extends TextCondition {
-    public TextContainsCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) {
+    public TextContainsCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) throws QueryParsingException {
         super(lefthandComponent, righthandComponent);
     }
 

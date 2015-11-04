@@ -3,18 +3,16 @@ package book_catalogue.query;
 public class SpecialToken extends Token {
     public static final String[] SPECIAL_TOKENS = new String[] { "(", ")", "==", "~~", ">", "<", ">=", "<=", "and", "or" };
 
-    private String value;
+    public SpecialToken(int startPos, String value) throws QueryParsingException {
+        super(startPos, value);
 
-    public SpecialToken(String value) {
         if (!SpecialToken.isSpecialToken(value)) {
-            // ### Not a special token
+            throw new QueryParsingException(
+                this.getStartPosition(),
+                this.getEndPosition(),
+                "Not a valid special token: " + value
+            );
         }
-
-        this.value = value;
-    }
-
-    public String getValue() {
-        return this.value;
     }
 
     public static boolean isSpecialToken(String value) {

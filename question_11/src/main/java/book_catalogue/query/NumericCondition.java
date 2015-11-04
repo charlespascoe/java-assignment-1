@@ -6,19 +6,27 @@ public abstract class NumericCondition extends Condition {
     private TextToken lefthandToken;
     private NumericToken righthandToken;
 
-    public NumericCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) {
+    public NumericCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) throws QueryParsingException {
+        super(lefthandComponent.getStartPosition(), righthandComponent.getEndPosition());
+
         if (!(lefthandComponent instanceof TextToken)) {
-            // ### Unexpected component type!
+            throw new UnexpectedQueryComponentException(lefthandComponent, "text token");
         }
 
         if (!(righthandComponent instanceof NumericToken)) {
-            // ### Unexpected component type!
+            throw new UnexpectedQueryComponentException(righthandComponent, "number token");
         }
-
-        // TODO: Add check for field
 
         this.lefthandToken = (TextToken)lefthandComponent;
         this.righthandToken = (NumericToken)righthandComponent;
+
+        if (!NumericCondition.isNumericField(this.lefthandToken.getValue())) {
+            throw new UnrecognisedFieldException(this.lefthandToken, "numeric");
+        }
+    }
+
+    public static boolean isNumericField(String field) {
+        return field.equals("publication_year");
     }
 
     protected int compareTo(Book book) {
