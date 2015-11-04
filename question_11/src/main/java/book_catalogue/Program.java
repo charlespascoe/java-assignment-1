@@ -1,15 +1,13 @@
 package book_catalogue;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.ArrayList;
 import book_catalogue.query.QueryBuilder;
 import book_catalogue.query.Condition;
 import book_catalogue.query.QueryParsingException;
+import java.io.Console;
 
 public class Program {
     public static void main(String[] args) {
-        List<Book> books = new ArrayList<Book>();
+        BookCatalogue books = new BookCatalogue();
 
         books.add(new Book("The Hitchhiker's Guide to the Galaxy", new Author("Douglas", "Adams"), "Megadodo Publications", 1979, BookStatus.AVAILABLE));
         books.add(new Book("Applied Cryptography", new Author("Bruce", "Schneier"), "John Wiley & Sons", 1994, BookStatus.ON_LOAN));
@@ -26,45 +24,62 @@ public class Program {
             BookStatus.UNAVAILABLE
         ));
 
-        Collections.sort(books);
+        books.sort();
 
-        // for (Book b : books) {
-        //    System.out.println(b);
-        // }
+        // String query = "title ~~ 'to' and publication_year < 2000 and not (author.first_name ~~ 'douglas' and author.second_name ~~ 'adams')";
+        // query = "status == unavailable";
 
-        String query = "title ~~ 'to the' and not (author.first_name == 'douglas' and author.second_name == 'adams')";
-        query = "title ~~ 'to the' and publication_year >= 2009";
+        Program.userQuery(books);
 
-        Condition c = null;
+    }
 
-        try {
-            c = QueryBuilder.buildQuery(query);
-        } catch (QueryParsingException e) {
-            StringBuilder str = new StringBuilder();
-            str.append(query).append("\n");
+    private static void userQuery(BookCatalogue books) {
+        Console console = System.console();
 
-            for (int i = 0; i < query.length(); i++) {
-                if (i >= e.getStartPosition() && i <= e.getEndPosition()) {
-                    str.append("^");
-                } else {
-                    str.append(" ");
+        if (console == null) return;
+
+        String input = "";
+
+        while (true) {
+            System.out.print("query> ");
+
+            input = console.readLine();
+
+            if (input == null) return;
+
+            if (input == null || input.toLowerCase().equals("quit")) {
+                break;
+            } else if (input.toLowerCase().equals("help")) {
+                System.out.println("No help yet!!!\n\n");
+            } else if (!input.equals("")) {
+                Condition cond = null;
+
+                try {
+                    cond = QueryBuilder.buildQuery(input);
+                } catch (QueryParsingException ex) {
+                    StringBuilder str = new StringBuilder();
+                    str.append(input).append("\n");
+
+                    for (int i = 0; i < input.length(); i++) {
+                        if (i >= ex.getStartPosition() && i <= ex.getEndPosition()) {
+                            str.append("^");
+                        } else {
+                            str.append(" ");
+                        }
+                    }
+
+                    str.append("\n").append(ex.getMessage());
+
+                    System.out.println(str);
+                }
+
+                if (cond != null) {
+                    for (Book book : books.filter(cond)) {
+                        System.out.println(book);
+                    }
                 }
             }
-
-            str.append("\n").append(e.getMessage());
-
-            System.out.println(str);
-
         }
-
-        if (c != null) {
-            for (Book book : books) {
-                if (c.isMatch(book)) {
-                    System.out.println(book);
-                }
-            }
-        }
-
     }
 }
 
