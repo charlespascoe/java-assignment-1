@@ -9,18 +9,13 @@ import book_catalogue.Utils;
 public class QueryBuilder {
     public static Condition buildQuery(String query) throws QueryParsingException {
         List<QueryComponent> tokens = QueryBuilder.tokenise(query);
-
-        for (QueryComponent qc : tokens) {
-            System.out.println(((Token)qc).getValue());
-        }
-
         return QueryBuilder.buildAbstractSyntaxTree(tokens);
     }
 
     public static List<QueryComponent> tokenise(String query) throws QueryParsingException {
         // http://stackoverflow.com/questions/366202/regex-for-splitting-a-string-using-space-when-not-surrounded-by-single-or-double
         // (Accessed 29/10/2015)
-        Pattern regex = Pattern.compile("\\(|\\)|[^\\s\"']+|\"([^\"]*)\"|'([^']*)'");
+        Pattern regex = Pattern.compile("\\(|\\)|[^\\s\"'\\)]+|\"([^\"]*)\"|'([^']*)'");
         Matcher matcher = regex.matcher(query);
 
         List<QueryComponent> tokens = new LinkedList<QueryComponent>();
@@ -33,14 +28,15 @@ public class QueryBuilder {
                 // Single-quoted string
                 tokens.add(new TextToken(matcher.start(2), matcher.group(2)));
             } else {
+                int startIndex = matcher.start();
                 String text = matcher.group();
 
                 if (SpecialToken.isSpecialToken(text)) {
-                    tokens.add(new SpecialToken(matcher.start(), text));
+                    tokens.add(new SpecialToken(startIndex, text));
                 } else if (NumericToken.isNumber(text)) {
-                    tokens.add(new NumericToken(matcher.start(), text));
+                    tokens.add(new NumericToken(startIndex, text));
                 } else {
-                    tokens.add(new TextToken(matcher.start(), text));
+                    tokens.add(new TextToken(startIndex, text));
                 }
             }
         }
@@ -186,14 +182,16 @@ public class QueryBuilder {
                 if (c instanceof SpecialToken) {
                     SpecialToken st = (SpecialToken)c;
 
-                    if (st.getValue() == "(") {
+                    if (st.getValue().equals("(")) {
                         int closeBracketIndex = QueryBuilder.findClosingBracket(i, components);
 
                         if (closeBracketIndex == -1) {
                             // ### Closing bracket not found!
+                            throw new QueryParsingException(st.getStartPosition(), st.getEndPosition(), "Closing bracket not found!");
                         }
 
-                        Condition result = QueryBuilder.buildAbstractSyntaxTree(components.subList(i + 1, closeBracketIndex));
+                        Condition result = QueryBuilder.buildAbstractSyntaxTree(Utils.subList(components, i + 1, closeBracketIndex - 1));
+
                         Utils.spliceIntoList(components, i, closeBracketIndex, result);
 
                         bracketsFound = true;
@@ -211,9 +209,9 @@ public class QueryBuilder {
             if (c instanceof SpecialToken) {
                 SpecialToken st = (SpecialToken)c;
 
-                if (st.getValue() == "(") {
+                if (st.getValue().equals("(")) {
                     bracketCount++;
-                } else if (st.getValue() == ")") {
+                } else if (st.getValue().equals(")")) {
                     if (bracketCount == 0) return i;
                     bracketCount--;
                 }
