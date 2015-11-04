@@ -6,6 +6,9 @@ public abstract class QueryComponent {
 
     public QueryComponent(int startPos, int endPos) {
         this.startPos = startPos;
+
+        if (endPos < startPos) endPos = startPos;
+
         this.endPos = endPos;
     }
 
