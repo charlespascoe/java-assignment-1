@@ -54,11 +54,11 @@ public class QueryBuilder {
 
                 if (QueryBuilder.isCondition(st.getValue())) {
                     if (i + 1 == components.size()) {
-                        // ### Unexpected end of input
+                        throw new QueryParsingException(st.getEndPosition(), "Unexpected end of input");
                     }
 
                     if (i - 1 < 0) {
-                        // ### Expected field
+                        throw new QueryParsingException(0, "Expected text token before condition");
                     }
 
                     QueryComponent lefthandComponent = components.get(i - 1);
@@ -108,7 +108,7 @@ public class QueryBuilder {
 
                 if (st.getValue().equals("not")) {
                     if (i + 1 == components.size()) {
-                        // ### Unexpected end of input
+                        throw new QueryParsingException(st.getEndPosition(), "Unexpected end of input");
                     }
 
                     QueryComponent righthandComponent = components.get(i + 1);
@@ -124,31 +124,53 @@ public class QueryBuilder {
             if (c instanceof SpecialToken) {
                 SpecialToken st = (SpecialToken)c;
 
-                QueryComponent lefthandComponent = components.get(i - 1);
-                QueryComponent righthandComponent = components.get(i + 1);
+                if (st.getValue().equals("and")) {
+                    if (i + 1 == components.size()) {
+                        throw new QueryParsingException(st.getEndPosition(), "Unexpected end of input");
+                    }
 
-                Condition result = null;
+                    if (i - 1 < 0) {
+                        throw new QueryParsingException(0, "Expected condition before 'and'");
+                    }
+                    QueryComponent lefthandComponent = components.get(i - 1);
+                    QueryComponent righthandComponent = components.get(i + 1);
 
-                switch (st.getValue()) {
-                    case "and":
-                        result = new LogicalAndCondition(lefthandComponent, righthandComponent);
-                        break;
-                    case "or":
-                        result = new LogicalOrCondition(lefthandComponent, righthandComponent);
-                        break;
-                    default:
-                        // ### Unexpected Special Token
+                    Utils.spliceIntoList(components, i - 1, i + 1, new LogicalAndCondition(lefthandComponent, righthandComponent));
+                    // Subtract 1 so that i points at
+                    // the newly inserted element
+                    i--;
                 }
-
-                Utils.spliceIntoList(components, i - 1, i + 1, result);
-                // Subtract 1 so that i points at
-                // the newly inserted element
-                i--;
             }
         }
 
-        if (components.size() != 1) {
-            // ### conditions not joined correctly
+        for (int i = 0; i < components.size(); i++) {
+            QueryComponent c = components.get(i);
+
+            if (c instanceof SpecialToken) {
+                SpecialToken st = (SpecialToken)c;
+
+                if (st.getValue().equals("or")) {
+                    if (i + 1 == components.size()) {
+                        throw new QueryParsingException(st.getEndPosition(), "Unexpected end of input");
+                    }
+
+                    if (i - 1 < 0) {
+                        throw new QueryParsingException(0, "Expected condition before 'or'");
+                    }
+                    QueryComponent lefthandComponent = components.get(i - 1);
+                    QueryComponent righthandComponent = components.get(i + 1);
+
+                    Utils.spliceIntoList(components, i - 1, i + 1, new LogicalOrCondition(lefthandComponent, righthandComponent));
+                    // Subtract 1 so that i points at
+                    // the newly inserted element
+                    i--;
+                }
+            }
+        }
+
+        if (components.size() > 1) {
+            int index = components.get(1).getStartPosition();
+            throw new QueryParsingException(index, "Unexpected query component");
         }
 
         QueryComponent qc = components.get(0);
