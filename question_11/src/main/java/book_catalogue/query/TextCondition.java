@@ -47,7 +47,7 @@ public abstract class TextCondition extends Condition {
                     if (this.matchesCondition(auth.getFirstName(), inputValue)) return true;
                 }
                 return false;
-            case "author.last_name":
+            case "author.second_name":
                 for (Author auth : book.getAuthors()) {
                     if (this.matchesCondition(auth.getSecondName(), inputValue)) return true;
                 }
