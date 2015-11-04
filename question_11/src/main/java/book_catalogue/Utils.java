@@ -36,6 +36,17 @@ public class Utils {
         return array1.length - array2.length;
     }
 
+    public static <E> List<E> subList(List<E> list, int startIndex, int endIndex) {
+        List<E> l = new LinkedList<E>();
+
+        for (int i = startIndex; i <= endIndex; i++) {
+            // Note: object references are maintained
+            l.add(list.get(i));
+        }
+
+        return l;
+    }
+
     public static <E> void spliceIntoList(List<E> list, int startIndex, int endIndex, E replacementElement) {
         LinkedList<E> l = new LinkedList<E>();
         l.add(replacementElement);
