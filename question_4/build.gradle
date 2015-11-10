@@ -1,0 +1,12 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'product.Program'
+
+jar {
+    baseName = 'product'
+    version =  '0.0.1'
+    manifest {
+        attributes 'Main-Class': 'product.Program'
+    }
+}
