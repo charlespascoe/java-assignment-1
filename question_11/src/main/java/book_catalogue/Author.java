@@ -16,7 +16,11 @@ public class Author implements Comparable<Author> {
     public String getFullName() { return this.firstName + " " + this.secondName; }
 
     public int compareTo(Author other) {
-        return this.secondName.compareTo(other.getSecondName());
+        int result = this.secondName.compareTo(other.getSecondName());
+
+        if (result != 0) return result;
+
+        return this.firstName.compareTo(other.getFirstName());
     }
 
     @Override
