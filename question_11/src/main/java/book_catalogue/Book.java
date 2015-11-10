@@ -19,6 +19,7 @@ public class Book implements Comparable<Book> {
         this.publisher = publisher;
         this.publicationYear = publicationYear;
         this.status = status;
+        Arrays.sort(this.authors);
     }
 
     public String getTitle() { return this.title; }
