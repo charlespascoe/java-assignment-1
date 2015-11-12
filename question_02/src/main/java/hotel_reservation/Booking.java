@@ -13,6 +13,14 @@ public class Booking {
         this.numberOfPeople = numberOfPeople;
     }
 
+    public Room getRoom() { return this.room; }
+
+    public Calendar getStartDate() { return (Calendar)this.startDate.clone(); }
+
+    public Calendar geEndDate() { return (Calendar)this.endDate.clone(); }
+
+    public int getNumberOfPeople() { return this.numberOfPeople; }
+
     public boolean dateCollidesWithBooking(Calendar date) {
         return this.startDate.after(date) && this.endDate.before(date);
     }
