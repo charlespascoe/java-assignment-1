@@ -20,5 +20,16 @@ public class BookCatalogue extends ArrayList<Book> {
 
         return results;
     }
+
+    public Book getBookByID(String id) {
+        id = id.toLowerCase();
+        for (Book book : this) {
+            if (book.getID().toLowerCase().equals(id)) {
+                return book;
+            }
+        }
+
+        return null;
+    }
 }
 
