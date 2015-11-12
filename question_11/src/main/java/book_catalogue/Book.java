@@ -3,17 +3,19 @@ package book_catalogue;
 import java.util.Arrays;
 
 public class Book implements Comparable<Book> {
+    private String id;
     private String title;
     private Author[] authors;
     private String publisher;
     private int publicationYear;
     private BookStatus status;
 
-    public Book(String title, Author author, String publisher, int publicationYear, BookStatus status) {
-        this(title, new Author[] { author }, publisher, publicationYear, status);
+    public Book(String id, String title, Author author, String publisher, int publicationYear, BookStatus status) {
+        this(id, title, new Author[] { author }, publisher, publicationYear, status);
     }
 
-    public Book(String title, Author[] authors, String publisher, int publicationYear, BookStatus status) {
+    public Book(String id, String title, Author[] authors, String publisher, int publicationYear, BookStatus status) {
+        this.id = id;
         this.title = title;
         this.authors = Arrays.copyOf(authors, authors.length);
         this.publisher = publisher;
@@ -21,6 +23,8 @@ public class Book implements Comparable<Book> {
         this.status = status;
         Arrays.sort(this.authors);
     }
+
+    public String getID() { return this.id; }
 
     public String getTitle() { return this.title; }
 

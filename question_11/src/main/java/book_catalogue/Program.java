@@ -9,9 +9,10 @@ public class Program {
     public static void main(String[] args) {
         BookCatalogue books = new BookCatalogue();
 
-        books.add(new Book("The Hitchhiker's Guide to the Galaxy", new Author("Douglas", "Adams"), "Megadodo Publications", 1979, BookStatus.AVAILABLE));
-        books.add(new Book("Applied Cryptography", new Author("Bruce", "Schneier"), "John Wiley & Sons", 1994, BookStatus.ON_LOAN));
+        books.add(new Book("#000042", "The Hitchhiker's Guide to the Galaxy", new Author("Douglas", "Adams"), "Megadodo Publications", 1979, BookStatus.AVAILABLE));
+        books.add(new Book("#065537", "Applied Cryptography", new Author("Bruce", "Schneier"), "John Wiley & Sons", 1994, BookStatus.ON_LOAN));
         books.add(new Book(
+            "#333333",
             "Introduction to Algorithms (3rd Edition)",
             new Author[] {
                 new Author("Thomas", "Cormen"),

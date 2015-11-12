@@ -7,7 +7,7 @@ public abstract class TextCondition extends Condition {
     protected TextToken lefthandToken;
     protected TextToken righthandToken;
 
-    public static final String[] TEXT_FIELDS = new String[] { "title", "author.first_name", "author.second_name", "publisher", "status" };
+    public static final String[] TEXT_FIELDS = new String[] { "id", "title", "author.first_name", "author.second_name", "publisher", "status" };
 
     public TextCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) throws QueryParsingException {
         super(lefthandComponent.getStartPosition(), righthandComponent.getEndPosition());
@@ -40,6 +40,8 @@ public abstract class TextCondition extends Condition {
     public boolean isMatch(Book book) {
         String inputValue = this.righthandToken.getValue();
         switch (this.lefthandToken.getValue().toLowerCase()) {
+            case "id":
+                return this.matchesCondition(book.getID(), inputValue);
             case "title":
                 return this.matchesCondition(book.getTitle(), inputValue);
             case "author.first_name":
