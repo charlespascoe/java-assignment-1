@@ -4,10 +4,10 @@ import book_catalogue.Book;
 import book_catalogue.Author;
 
 public abstract class TextCondition extends Condition {
-    protected TextToken lefthandToken;
+    protected Book.Field field;
     protected TextToken righthandToken;
 
-    public static final String[] TEXT_FIELDS = new String[] { "id", "title", "author.first_name", "author.second_name", "publisher", "status" };
+    public static final Book.Field[] TEXT_FIELDS = new Book.Field[] { Book.Field.ID, Book.Field.TITLE, Book.Field.AUTHOR_FIRST_NAME, Book.Field.AUTHOR_SECOND_NAME, Book.Field.STATUS };
 
     public TextCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) throws QueryParsingException {
         super(lefthandComponent.getStartPosition(), righthandComponent.getEndPosition());
@@ -20,17 +20,19 @@ public abstract class TextCondition extends Condition {
             throw new UnexpectedQueryComponentException(righthandComponent, "text token");
         }
 
-        this.lefthandToken = (TextToken)lefthandComponent;
+        TextToken lefthandToken = (TextToken)lefthandComponent;
         this.righthandToken = (TextToken)righthandComponent;
 
-        if (!TextCondition.isTextField(this.lefthandToken.getValue())) {
-            throw new UnrecognisedFieldException(this.lefthandToken, "text");
+        if (!TextCondition.isTextField(lefthandToken.getValue())) {
+            throw new UnrecognisedFieldException(lefthandToken, "text");
         }
+
+        this.field = Book.Field.fromString(lefthandToken.getValue());
     }
 
     public static boolean isTextField(String text) {
-        for (String field : TextCondition.TEXT_FIELDS) {
-            if (field.equals(text.toLowerCase())) return true;
+        for (Book.Field field : TextCondition.TEXT_FIELDS) {
+            if (field.toString().equals(text.toLowerCase())) return true;
         }
 
         return false;
@@ -39,28 +41,16 @@ public abstract class TextCondition extends Condition {
     @Override
     public boolean isMatch(Book book) {
         String inputValue = this.righthandToken.getValue();
-        switch (this.lefthandToken.getValue().toLowerCase()) {
-            case "id":
-                return this.matchesCondition(book.getID(), inputValue);
-            case "title":
-                return this.matchesCondition(book.getTitle(), inputValue);
-            case "author.first_name":
-                for (Author auth : book.getAuthors()) {
-                    if (this.matchesCondition(auth.getFirstName(), inputValue)) return true;
-                }
-                return false;
-            case "author.second_name":
-                for (Author auth : book.getAuthors()) {
-                    if (this.matchesCondition(auth.getSecondName(), inputValue)) return true;
-                }
-                return false;
-            case "publisher":
-                return this.matchesCondition(book.getPublisher(), inputValue);
-            case "status":
-                return this.matchesCondition(book.getStatus().name(), inputValue);
-        }
 
-        return false;
+        if (this.field == Book.Field.AUTHOR_FIRST_NAME || this.field == Book.Field.AUTHOR_SECOND_NAME) {
+            for (String name : (String[])book.getField(this.field)) {
+                if (this.matchesCondition(name, inputValue)) return true;
+            }
+
+            return false;
+        } else {
+            return this.matchesCondition((String)book.getField(this.field), inputValue);
+        }
     }
 
     protected abstract boolean matchesCondition(String bookValue, String inputValue);
