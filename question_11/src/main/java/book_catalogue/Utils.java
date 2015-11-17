@@ -58,5 +58,25 @@ public class Utils {
 
         list.addAll(startIndex, replacementElements);
     }
+
+    public static int compareNumbers(Number n1, Number n2) {
+        // Compares two Number objects,
+        // using the first object to determine the type to compare by
+        if (n1 instanceof Byte) {
+            return ((Byte)n1).compareTo(new Byte(n2.byteValue()));
+        } else if (n1 instanceof Short) {
+            return ((Short)n1).compareTo(new Short(n2.shortValue()));
+        } else if (n1 instanceof Integer) {
+            return ((Integer)n1).compareTo(new Integer(n2.intValue()));
+        } else if (n1 instanceof Long) {
+            return ((Long)n1).compareTo(new Long(n2.longValue()));
+        } else if (n1 instanceof Float) {
+            return ((Float)n1).compareTo(new Float(n2.floatValue()));
+        } else if (n1 instanceof Double) {
+            return ((Double)n1).compareTo(new Double(n2.doubleValue()));
+        } else {
+            return 0;
+        }
+    }
 }
 
