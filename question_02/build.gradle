@@ -1,0 +1,20 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'hotel_reservation.Program'
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    baseName = 'hotel_reservation'
+    version =  '0.0.1'
+    manifest {
+        attributes 'Main-Class': 'hotel_reservation.Program'
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.4'
+}
