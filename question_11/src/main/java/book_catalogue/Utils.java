@@ -22,15 +22,13 @@ public class Utils {
     public static <T extends Comparable<? super T>> int compareArrays(T[] array1, T[] array2) {
         int maxLength = array1.length < array2.length ? array1.length : array2.length;
 
-        if (maxLength == 0) return 0;
-
         for (int i = 0; i < maxLength; i++) {
             int compareResult = array1[i].compareTo(array2[i]);
 
             if (compareResult != 0) return compareResult;
         }
 
-        // The first few elements of the longer array
+        // By this point, the first few elements of the longer array
         // are equal to the shorter array, so assume the longer array
         // is 'larger'
         return array1.length - array2.length;
