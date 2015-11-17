@@ -1,12 +1,13 @@
 package book_catalogue.query;
 
 import book_catalogue.Book;
+import book_catalogue.Utils;
 
 public abstract class NumericCondition extends Condition {
-    private TextToken lefthandToken;
+    private Book.Field field;
     private NumericToken righthandToken;
 
-    public static final String[] NUMERIC_FIELDS = new String[] { "publication_year" };
+    public static final Book.Field[] NUMERIC_FIELDS = new Book.Field[] { Book.Field.PUBLICATION_YEAR };
 
     public NumericCondition(QueryComponent lefthandComponent, QueryComponent righthandComponent) throws QueryParsingException {
         super(lefthandComponent.getStartPosition(), righthandComponent.getEndPosition());
@@ -19,17 +20,19 @@ public abstract class NumericCondition extends Condition {
             throw new UnexpectedQueryComponentException(righthandComponent, "number token");
         }
 
-        this.lefthandToken = (TextToken)lefthandComponent;
+        TextToken lefthandToken = (TextToken)lefthandComponent;
         this.righthandToken = (NumericToken)righthandComponent;
 
-        if (!NumericCondition.isNumericField(this.lefthandToken.getValue())) {
-            throw new UnrecognisedFieldException(this.lefthandToken, "numeric");
+        if (!NumericCondition.isNumericField(lefthandToken.getValue())) {
+            throw new UnrecognisedFieldException(lefthandToken, "numeric");
         }
+
+        this.field = Book.Field.fromString(lefthandToken.getValue());
     }
 
     public static boolean isNumericField(String text) {
-        for (String field : NumericCondition.NUMERIC_FIELDS) {
-            if (field.equals(text.toLowerCase())) return true;
+        for (Book.Field field : NumericCondition.NUMERIC_FIELDS) {
+            if (field.toString().equals(text.toLowerCase())) return true;
         }
 
         return false;
@@ -37,15 +40,13 @@ public abstract class NumericCondition extends Condition {
 
     @Override
     public boolean isMatch(Book book) {
-        switch (this.lefthandToken.getValue().toLowerCase()) {
-            case "publication_year":
-                int bookValue = book.getPublicationYear();
-                int inputValue = this.righthandToken.getIntValue();
+        Number inputValue = this.righthandToken.getValue().contains(".") ?
+            new Double(this.righthandToken.getDoubleValue()) :
+            new Long(this.righthandToken.getIntValue());
 
-                return this.matchesCondition(bookValue - inputValue);
-        }
+        Number bookValue = (Number)book.getField(this.field);
 
-        return false;
+        return this.matchesCondition(Utils.compareNumbers(bookValue, inputValue));
     }
 
     protected abstract boolean matchesCondition(int diff);
