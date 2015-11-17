@@ -84,17 +84,17 @@ public class Book implements Comparable<Book> {
                 return this.title;
             case AUTHOR_FIRST_NAME:
             case AUTHOR_SECOND_NAME:
-                List<String> names = new ArrayList<String>();
+                String[] names = new String[this.authors.length];
 
-                for (Author a : this.authors) {
+                for (int i = 0; i < names.length; i++) {
                     if (field == Field.AUTHOR_FIRST_NAME) {
-                        names.add(a.getFirstName());
+                        names[i] = this.authors[i].getFirstName();
                     } else {
-                        names.add(a.getSecondName());
+                        names[i] = this.authors[i].getSecondName();
                     }
                 }
 
-                return names.toArray();
+                return names;
             case PUBLISHER:
                 return this.publisher;
             case PUBLICATION_YEAR:
