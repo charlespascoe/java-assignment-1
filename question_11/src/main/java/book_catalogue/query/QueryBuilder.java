@@ -18,7 +18,7 @@ public class QueryBuilder {
     }
 
     private static Sorter buildSorter(BetterList<QueryComponent> tokens) throws QueryParsingException {
-        int index = tokens.indexOf(new SpecialToken(SpecialToken.TokenConstant.SORT));
+        int index = tokens.indexOf(SpecialToken.TokenConstant.SORT.toToken());
 
         if (index == -1) return null;
 
@@ -30,16 +30,15 @@ public class QueryBuilder {
         SpecialToken sortToken = (SpecialToken)sortTokens.pop(0);
 
         if (sortTokens.size() == 0) {
-            throw new QueryParsingException(sortToken.getEndPosition(), "Expected field after 'sort'");
+            throw new QueryParsingException(sortToken.getEndPosition(), "Expected field after '" + SpecialToken.TokenConstant.SORT.toString() + "'");
         }
 
         while (sortTokens.size() > 0) {
             BetterList<QueryComponent> fieldTokens = sortTokens.takeUntilFound(new SpecialToken(","));
-            System.out.println(fieldTokens.size());
 
             SpecialToken comma = null;
 
-            if (fieldTokens.last().equals(new SpecialToken(","))) {
+            if (fieldTokens.last().equals(SpecialToken.TokenConstant.COMMA.toToken())) {
                 comma = (SpecialToken)fieldTokens.pop();
             }
 
@@ -101,7 +100,7 @@ public class QueryBuilder {
 
         for (SpecialToken.TokenConstant conditionTokenConstant : Utils.union(TextCondition.TEXT_CONDITIONS, NumericCondition.NUMERIC_CONDITIONS)) {
             while (true) {
-                int index = components.indexOf(new SpecialToken(conditionTokenConstant));
+                int index = components.indexOf(conditionTokenConstant.toToken());
 
                 if (index == -1) break;
 
@@ -179,8 +178,7 @@ public class QueryBuilder {
         }
 
         if (components.size() > 1) {
-            int index = components.get(1).getStartPosition();
-            throw new QueryParsingException(index, "Unexpected query component");
+            throw new QueryParsingException(components.get(1).getStartPosition(), components.last().getEndPosition(), "Unexpected query component(s)");
         }
 
         QueryComponent qc = components.get(0);
@@ -214,17 +212,16 @@ public class QueryBuilder {
                 if (c instanceof SpecialToken) {
                     SpecialToken st = (SpecialToken)c;
 
-                    if (st.getValue().equals("(")) {
+                    if (st.getTokenConstant() == SpecialToken.TokenConstant.OPEN_BRACKET) {
                         int closeBracketIndex = QueryBuilder.findClosingBracket(i, components);
 
                         if (closeBracketIndex == -1) {
-                            // ### Closing bracket not found!
-                            throw new QueryParsingException(st.getStartPosition(), st.getEndPosition(), "Closing bracket not found!");
+                            throw new QueryParsingException(st.getStartPosition(), st.getEndPosition(), "Closing bracket not found");
                         }
 
                         Condition result = QueryBuilder.buildAbstractSyntaxTree(new BetterList<QueryComponent>(Utils.subList(components, i + 1, closeBracketIndex - 1)));
 
-                        Utils.spliceIntoList(components, i, closeBracketIndex, result);
+                        components.splice(i, closeBracketIndex, result);
 
                         bracketsFound = true;
                     }
@@ -241,9 +238,9 @@ public class QueryBuilder {
             if (c instanceof SpecialToken) {
                 SpecialToken st = (SpecialToken)c;
 
-                if (st.getValue().equals("(")) {
+                if (st.getTokenConstant() == SpecialToken.TokenConstant.OPEN_BRACKET) {
                     bracketCount++;
-                } else if (st.getValue().equals(")")) {
+                } else if (st.getTokenConstant() == SpecialToken.TokenConstant.CLOSE_BRACKET) {
                     if (bracketCount == 0) return i;
                     bracketCount--;
                 }

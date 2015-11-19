@@ -28,6 +28,10 @@ public class SpecialToken extends Token {
             return this.tokenConst;
         }
 
+        public SpecialToken toToken() {
+            return new SpecialToken(this);
+        }
+
         public static boolean isSpecialToken(String text) {
             for (TokenConstant token : TokenConstant.values()) {
                 if (token.toString().equalsIgnoreCase(text)) return true;
