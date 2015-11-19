@@ -5,20 +5,72 @@ import java.util.LinkedList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import book_catalogue.Utils;
+import book_catalogue.BetterList;
 
 public class QueryBuilder {
-    public static Condition buildQuery(String query) throws QueryParsingException {
-        List<QueryComponent> tokens = QueryBuilder.tokenise(query);
-        return QueryBuilder.buildAbstractSyntaxTree(tokens);
+    public static Query buildQuery(String input) throws QueryParsingException {
+        BetterList<QueryComponent> tokens = QueryBuilder.tokenise(input);
+
+        Sorter sorter = QueryBuilder.buildSorter(tokens);
+        Condition conditon = QueryBuilder.buildAbstractSyntaxTree(tokens);
+
+        return new Query(input, conditon, sorter);
     }
 
-    public static List<QueryComponent> tokenise(String query) throws QueryParsingException {
+    private static Sorter buildSorter(BetterList<QueryComponent> tokens) throws QueryParsingException {
+        int index = tokens.indexOf(new SpecialToken("sort"));
+
+        if (index == -1) return null;
+
+        List<BookFieldComparator> comparators = new LinkedList<BookFieldComparator>();
+
+        BetterList<QueryComponent> sortTokens = tokens.take(index, tokens.size() - index);
+
+        // Remove the "sort" SpecialToken
+        SpecialToken sortToken = (SpecialToken)sortTokens.pop(0);
+
+        if (sortTokens.size() == 0) {
+            throw new QueryParsingException(sortToken.getEndPosition(), "Expected field after 'sort'");
+        }
+
+        while (sortTokens.size() > 0) {
+            BetterList<QueryComponent> fieldTokens = sortTokens.takeUntilFound(new SpecialToken(","));
+            System.out.println(fieldTokens.size());
+
+            SpecialToken comma = null;
+
+            if (fieldTokens.last().equals(new SpecialToken(","))) {
+                comma = (SpecialToken)fieldTokens.pop();
+            }
+
+            switch (fieldTokens.size()) {
+                case 0:
+                    throw new QueryParsingException(comma.getStartPosition(), "Expected field before comma");
+                case 1:
+                    comparators.add(new BookFieldComparator(fieldTokens.get(0)));
+                    break;
+                case 2:
+                    comparators.add(new BookFieldComparator(fieldTokens.get(0), fieldTokens.get(1)));
+                    break;
+                default:
+                    // Too many tokens
+                    int startIndex = fieldTokens.get(2).getStartPosition();
+                    int endIndex = fieldTokens.last().getEndPosition();
+
+                    throw new QueryParsingException(startIndex, endIndex, "Too many tokens");
+            }
+        }
+
+        return new Sorter(comparators.toArray(new BookFieldComparator[0]));
+    }
+
+    public static BetterList<QueryComponent> tokenise(String query) throws QueryParsingException {
         // http://stackoverflow.com/questions/366202/regex-for-splitting-a-string-using-space-when-not-surrounded-by-single-or-double
         // (Accessed 29/10/2015)
-        Pattern regex = Pattern.compile("\\(|\\)|[^\\s\"'\\)]+|\"([^\"]*)\"|'([^']*)'");
+        Pattern regex = Pattern.compile("\\(|\\)|,|[^\\s\"'\\),]+|\"([^\"]*)\"|'([^']*)'");
         Matcher matcher = regex.matcher(query);
 
-        List<QueryComponent> tokens = new LinkedList<QueryComponent>();
+        BetterList<QueryComponent> tokens = new BetterList<>(new LinkedList<QueryComponent>());
 
         while (matcher.find()) {
             if (matcher.group(1) != null) {
