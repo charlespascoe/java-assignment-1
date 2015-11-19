@@ -24,6 +24,14 @@ public class Book implements Comparable<Book> {
             return this.name;
         }
 
+        public static boolean isField(String text) {
+            for (Field field : Field.values()) {
+                if (field.toString().equals(text.toLowerCase())) return true;
+            }
+
+            return false;
+        }
+
         public static Field fromString(String text) {
             for (Field field : Field.values()) {
                 if (field.toString().equals(text.toLowerCase())) {
