@@ -27,5 +27,9 @@ public class NumericToken extends Token {
         return Pattern.compile("[0-9]+(\\.[0-9]+)?").matcher(text).matches();
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof NumericToken && super.equals(obj);
+    }
 }
 

@@ -11,5 +11,14 @@ public abstract class Token extends QueryComponent {
     public String getValue() {
         return this.value;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Token) {
+            return ((Token)obj).getValue().equalsIgnoreCase(this.getValue());
+        } else {
+            return false;
+        }
+    }
 }
 

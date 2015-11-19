@@ -22,5 +22,10 @@ public class SpecialToken extends Token {
 
         return false;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof SpecialToken && super.equals(obj);
+    }
 }
 
