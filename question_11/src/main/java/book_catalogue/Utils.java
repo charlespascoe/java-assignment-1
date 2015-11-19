@@ -2,6 +2,8 @@ package book_catalogue;
 
 import java.util.List;
 import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Arrays;
 
 public class Utils {
@@ -32,6 +34,20 @@ public class Utils {
         // are equal to the shorter array, so assume the longer array
         // is 'larger'
         return array1.length - array2.length;
+    }
+
+    public static <E> Collection<E> union(E[]... arrays) {
+        List<E> list = new ArrayList<E>();
+
+        for (E[] array : arrays) {
+            for (E elem : array) {
+                if (!list.contains(elem)) {
+                    list.add(elem);
+                }
+            }
+        }
+
+        return list;
     }
 
     public static <E> List<E> subList(List<E> list, int startIndex, int endIndex) {
