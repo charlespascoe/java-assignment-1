@@ -1,12 +1,24 @@
 package book_catalogue;
 
 import book_catalogue.query.QueryBuilder;
-import book_catalogue.query.Condition;
+import book_catalogue.query.Query;
 import book_catalogue.query.QueryParsingException;
 import java.io.Console;
+import java.util.Collections;
+import java.util.List;
 
 public class Program {
     public static void main(String[] args) {
+        Table<Book> t = new Table<Book>(new TableFormatter<Book>() {
+            @Override
+            public String[] getFields() { return new String[0]; }
+
+            @Override
+            public String getField(Book item, String field) { return ""; }
+        });
+
+        System.out.println(t.toString());
+
         BookCatalogue books = new BookCatalogue();
 
         books.add(new Book("#000042", "The Hitchhiker's Guide to the Galaxy", new Author("Douglas", "Adams"), "Megadodo Publications", 1979, BookStatus.AVAILABLE));
@@ -48,37 +60,47 @@ public class Program {
 
             if (input == null) return;
 
-            if (input == null || input.toLowerCase().equals("quit")) {
+            if (input.toLowerCase().equals("quit")) {
                 break;
             } else if (input.toLowerCase().equals("help")) {
                 System.out.println("No help yet!!!\n\n");
             } else if (!input.equals("")) {
-                Condition cond = null;
+                String[] arr = input.split("[\\ ]+", 2);
+                String action = arr[0];
+                String arguments = arr[1];
 
-                try {
-                    cond = QueryBuilder.buildQuery(input);
-                } catch (QueryParsingException ex) {
-                    StringBuilder str = new StringBuilder();
-                    str.append(input).append("\n");
+                switch (action.toLowerCase()) {
+                    case "checkout":
+                        break;
+                    case "checkin":
+                        break;
+                    case "remove":
+                        break;
+                    case "query":
+                        Query query = null;
 
-                    for (int i = 0; i < input.length(); i++) {
-                        if (i >= ex.getStartPosition() && i <= ex.getEndPosition()) {
-                            str.append("^");
-                        } else {
-                            str.append(" ");
+                        try {
+                            query = QueryBuilder.buildQuery(arguments);
+                        } catch (QueryParsingException ex) {
+                            System.out.println(ex.getUserMessage(arguments));
                         }
-                    }
 
-                    str.append("\n").append(ex.getMessage());
+                        if (query != null) {
+                            List<Book> results = books.filter(query.getCondition());
 
-                    System.out.println(str);
+                            if (query.getSorter() != null) {
+                                Collections.sort(results, query.getSorter());
+                            }
+
+                            for (Book book : results) {
+                                System.out.println(book);
+                            }
+                        }
+                        break;
+                    default:
+                        break;
                 }
 
-                if (cond != null) {
-                    for (Book book : books.filter(cond)) {
-                        System.out.println(book);
-                    }
-                }
             }
         }
     }
