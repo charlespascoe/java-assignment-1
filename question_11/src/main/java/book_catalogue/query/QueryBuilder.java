@@ -18,7 +18,7 @@ public class QueryBuilder {
     }
 
     private static Sorter buildSorter(BetterList<QueryComponent> tokens) throws QueryParsingException {
-        int index = tokens.indexOf(new SpecialToken("sort"));
+        int index = tokens.indexOf(new SpecialToken(SpecialToken.TokenConstant.SORT));
 
         if (index == -1) return null;
 
@@ -83,7 +83,7 @@ public class QueryBuilder {
                 int startIndex = matcher.start();
                 String text = matcher.group();
 
-                if (SpecialToken.isSpecialToken(text)) {
+                if (SpecialToken.TokenConstant.isSpecialToken(text)) {
                     tokens.add(new SpecialToken(startIndex, text));
                 } else if (NumericToken.isNumber(text)) {
                     tokens.add(new NumericToken(startIndex, text));
@@ -96,127 +96,85 @@ public class QueryBuilder {
         return tokens;
     }
 
-    public static Condition buildAbstractSyntaxTree(List<QueryComponent> components) throws QueryParsingException {
+    public static Condition buildAbstractSyntaxTree(BetterList<QueryComponent> components) throws QueryParsingException {
         QueryBuilder.processBrackets(components);
 
-        for (int i = 0; i < components.size(); i++) {
-            QueryComponent c = components.get(i);
-            if (c instanceof SpecialToken) {
-                SpecialToken st = (SpecialToken)c;
+        for (SpecialToken.TokenConstant conditionTokenConstant : Utils.union(TextCondition.TEXT_CONDITIONS, NumericCondition.NUMERIC_CONDITIONS)) {
+            while (true) {
+                int index = components.indexOf(new SpecialToken(conditionTokenConstant));
 
-                if (QueryBuilder.isCondition(st.getValue())) {
-                    if (i + 1 == components.size()) {
-                        throw new QueryParsingException(st.getEndPosition(), "Unexpected end of input");
-                    }
+                if (index == -1) break;
 
-                    if (i - 1 < 0) {
-                        throw new QueryParsingException(0, "Expected text token before condition");
-                    }
+                SpecialToken conditionToken = (SpecialToken)components.get(index);
 
-                    QueryComponent lefthandComponent = components.get(i - 1);
-                    QueryComponent righthandComponent = components.get(i + 1);
-                    QueryComponent result = null;
-
-                    switch (st.getValue()) {
-                        case "==":
-                            if (righthandComponent instanceof TextToken) {
-                                result = new TextEqualCondition(lefthandComponent, righthandComponent);
-                            } else if (righthandComponent instanceof NumericToken) {
-                                result = new NumericEqualCondition(lefthandComponent, righthandComponent);
-                            } else {
-                                throw new UnexpectedQueryComponentException(righthandComponent, "text or number");
-                            }
-                            break;
-                        case "~~":
-                            result = new TextContainsCondition(lefthandComponent, righthandComponent);
-                            break;
-                        case ">":
-                            result = new NumericGreaterThanCondition(lefthandComponent, righthandComponent);
-                            break;
-                        case "<":
-                            result = new NumericLessThanCondition(lefthandComponent, righthandComponent);
-                            break;
-                        case ">=":
-                            result = new NumericGreaterThanOrEqualCondition(lefthandComponent, righthandComponent);
-                            break;
-                        case "<=":
-                            result = new NumericLessThanOrEqualCondition(lefthandComponent, righthandComponent);
-                            break;
-                    }
-
-                    Utils.spliceIntoList(components, i - 1, i + 1, result);
-                    // Subtract 1 so that i points at
-                    // the newly inserted element
-                    i--;
+                if (index + 1 == components.size()) {
+                    throw new QueryParsingException(conditionToken.getEndPosition(), "Unexpected end of input");
                 }
+
+                if (index - 1 < 0) {
+                    throw new QueryParsingException(0, "Expected text token before condition");
+                }
+
+                QueryComponent lefthandComponent = components.get(index - 1);
+                QueryComponent righthandComponent = components.get(index + 1);
+                QueryComponent result = null;
+
+                if (conditionToken.getTokenConstant() == SpecialToken.TokenConstant.EQUALS) {
+                    if (righthandComponent instanceof TextToken) {
+                        result = new TextCondition(lefthandComponent, conditionToken, righthandComponent);
+                    } else if (righthandComponent instanceof NumericToken) {
+                        result = new NumericCondition(lefthandComponent, conditionToken, righthandComponent);
+                    } else {
+                        throw new UnexpectedQueryComponentException(righthandComponent, "text or number");
+                    }
+                } else if (TextCondition.isTextConditionToken(conditionToken)) {
+                    result = new TextCondition(lefthandComponent, conditionToken, righthandComponent);
+                } else if (NumericCondition.isNumericConditionToken(conditionToken)) {
+                    result = new NumericCondition(lefthandComponent, conditionToken, righthandComponent);
+                } else {
+                    // throw error!
+                }
+
+                components.splice(index - 1, index + 1, result);
             }
         }
 
-        for (int i = 0; i < components.size(); i++) {
-            QueryComponent c = components.get(i);
+        while (true) {
+            int index = components.indexOf(new SpecialToken(SpecialToken.TokenConstant.NOT));
 
-            if (c instanceof SpecialToken) {
-                SpecialToken st = (SpecialToken)c;
+            if (index == -1) break;
 
-                if (st.getValue().equals("not")) {
-                    if (i + 1 == components.size()) {
-                        throw new QueryParsingException(st.getEndPosition(), "Unexpected end of input");
-                    }
+            SpecialToken notToken = (SpecialToken)components.get(index);
 
-                    QueryComponent righthandComponent = components.get(i + 1);
-
-                    Utils.spliceIntoList(components, i, i + 1, new NotCondition(righthandComponent));
-                }
+            if (index + 1 == components.size()) {
+                throw new QueryParsingException(notToken.getEndPosition(), "Unexpected end of input");
             }
+
+            QueryComponent righthandComponent = components.get(index + 1);
+
+            components.splice(index, index + 1, new NotCondition(notToken, righthandComponent));
         }
 
-        for (int i = 0; i < components.size(); i++) {
-            QueryComponent c = components.get(i);
+        for (SpecialToken.TokenConstant logicalConditionTokenConstant : LogicalCondition.LOGICAL_CONDITIONS) {
+            while (true) {
+                int index = components.indexOf(new SpecialToken(logicalConditionTokenConstant));
 
-            if (c instanceof SpecialToken) {
-                SpecialToken st = (SpecialToken)c;
+                if (index == -1) break;
 
-                if (st.getValue().equals("and")) {
-                    if (i + 1 == components.size()) {
-                        throw new QueryParsingException(st.getEndPosition(), "Unexpected end of input");
-                    }
+                SpecialToken logicalConditionToken = (SpecialToken)components.get(index);
 
-                    if (i - 1 < 0) {
-                        throw new QueryParsingException(0, "Expected condition before 'and'");
-                    }
-                    QueryComponent lefthandComponent = components.get(i - 1);
-                    QueryComponent righthandComponent = components.get(i + 1);
-
-                    Utils.spliceIntoList(components, i - 1, i + 1, new LogicalAndCondition(lefthandComponent, righthandComponent));
-                    // Subtract 1 so that i points at
-                    // the newly inserted element
-                    i--;
+                if (index + 1 == components.size()) {
+                    throw new QueryParsingException(logicalConditionToken.getEndPosition(), "Unexpected end of input");
                 }
-            }
-        }
 
-        for (int i = 0; i < components.size(); i++) {
-            QueryComponent c = components.get(i);
-
-            if (c instanceof SpecialToken) {
-                SpecialToken st = (SpecialToken)c;
-
-                if (st.getValue().equals("or")) {
-                    if (i + 1 == components.size()) {
-                        throw new QueryParsingException(st.getEndPosition(), "Unexpected end of input");
-                    }
-
-                    if (i - 1 < 0) {
-                        throw new QueryParsingException(0, "Expected condition before 'or'");
-                    }
-                    QueryComponent lefthandComponent = components.get(i - 1);
-                    QueryComponent righthandComponent = components.get(i + 1);
-
-                    Utils.spliceIntoList(components, i - 1, i + 1, new LogicalOrCondition(lefthandComponent, righthandComponent));
-                    // Subtract 1 so that i points at
-                    // the newly inserted element
-                    i--;
+                if (index - 1 < 0) {
+                    throw new QueryParsingException(0, "Expected condition before logical operator");
                 }
+
+                QueryComponent lefthandComponent = components.get(index - 1);
+                QueryComponent righthandComponent = components.get(index + 1);
+
+                components.splice(index - 1, index + 1, new LogicalCondition(lefthandComponent, logicalConditionToken, righthandComponent));
             }
         }
 
@@ -244,7 +202,7 @@ public class QueryBuilder {
             text.equals("<=");
     }
 
-    private static void processBrackets(List<QueryComponent> components) throws QueryParsingException {
+    private static void processBrackets(BetterList<QueryComponent> components) throws QueryParsingException {
         boolean bracketsFound;
 
         do {
@@ -264,7 +222,7 @@ public class QueryBuilder {
                             throw new QueryParsingException(st.getStartPosition(), st.getEndPosition(), "Closing bracket not found!");
                         }
 
-                        Condition result = QueryBuilder.buildAbstractSyntaxTree(Utils.subList(components, i + 1, closeBracketIndex - 1));
+                        Condition result = QueryBuilder.buildAbstractSyntaxTree(new BetterList<QueryComponent>(Utils.subList(components, i + 1, closeBracketIndex - 1)));
 
                         Utils.spliceIntoList(components, i, closeBracketIndex, result);
 
