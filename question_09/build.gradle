@@ -1,17 +1,22 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'uk.co.cpascoe.caesar_shift_cracker.Program'
+mainClassName = 'uk.co.cpascoe.caesar_shift_cracker.CaesarShiftCrackerWindow'
 
 repositories {
     mavenCentral()
+}
+
+dependencies {
+    compile 'com.jgoodies:jgoodies-forms:1.8.0'
+    compile 'com.miglayout:miglayout-swing:5.0'
 }
 
 jar {
     baseName = 'caesar_shift_cracker'
     version =  '0.0.1'
     manifest {
-        attributes 'Main-Class': 'uk.co.cpascoe.caesar_shift_cracker.Program'
+        attributes 'Main-Class': 'uk.co.cpascoe.caesar_shift_cracker.CaesarShiftCrackerWindow'
     }
 }
 
