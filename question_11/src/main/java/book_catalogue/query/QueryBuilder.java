@@ -12,7 +12,13 @@ public class QueryBuilder {
         BetterList<QueryComponent> tokens = QueryBuilder.tokenise(input);
 
         Sorter sorter = QueryBuilder.buildSorter(tokens);
-        Condition conditon = QueryBuilder.buildAbstractSyntaxTree(tokens);
+        Condition conditon;
+
+        if (tokens.size() > 0) {
+            conditon = QueryBuilder.buildAbstractSyntaxTree(tokens);
+        } else {
+            conditon = new AlwaysTrueCondition();
+        }
 
         return new Query(input, conditon, sorter);
     }
