@@ -54,7 +54,7 @@ public class Program {
         String input = "";
 
         while (true) {
-            System.out.print("query> ");
+            System.out.print("BookCatalogue> ");
 
             input = console.readLine();
 
@@ -65,16 +65,41 @@ public class Program {
             } else if (input.toLowerCase().equals("help")) {
                 System.out.println("No help yet!!!\n\n");
             } else if (!input.equals("")) {
-                String[] arr = input.split("[\\ ]+", 2);
+                String[] arr = input.split("\\s+", 2);
                 String action = arr[0];
-                String arguments = arr[1];
+                String arguments = arr.length == 1 ? "" : arr[1];
 
                 switch (action.toLowerCase()) {
                     case "checkout":
-                        break;
                     case "checkin":
-                        break;
                     case "remove":
+                        Book b = books.getBookByID(arguments);
+
+                        if (b == null) {
+                            System.out.println("Book not found!");
+                            break;
+                        }
+
+                        switch (action.toLowerCase()) {
+                            case "checkout":
+                                if (b.getStatus() == BookStatus.AVAILABLE) {
+                                    b.setStatus(BookStatus.ON_LOAN);
+                                } else {
+                                    System.out.printf("Cannot checkout '%s' as it is %s%n", b.getTitle(), b.getStatus().name());
+                                }
+                                break;
+                            case "checkin":
+                                if (b.getStatus() == BookStatus.ON_LOAN) {
+                                    b.setStatus(BookStatus.AVAILABLE);
+                                } else {
+                                    System.out.printf("Cannot checkin '%s' as it is %s%n", b.getTitle(), b.getStatus().name());
+                                }
+                                break;
+                            case "remove":
+                                b.setStatus(BookStatus.UNAVAILABLE);
+                                break;
+                        }
+
                         break;
                     case "query":
                         Query query = null;
@@ -93,7 +118,7 @@ public class Program {
                             }
 
                             for (Book book : results) {
-                                System.out.println(book);
+                                System.out.printf("[%s] %s (%s)%n", book.getID(), book, book.getStatus().name());
                             }
                         }
                         break;
