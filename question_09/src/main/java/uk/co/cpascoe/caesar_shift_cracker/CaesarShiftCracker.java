@@ -8,7 +8,7 @@ public class CaesarShiftCracker {
         public final int bestShift;
         public final double bestDelta;
 
-        public Result(int bestShift, int bestDelta) {
+        public Result(int bestShift, double bestDelta) {
             this.bestShift = bestShift;
             this.bestDelta = bestDelta;
         }
@@ -20,11 +20,11 @@ public class CaesarShiftCracker {
         this.alphabet = alphabet;
     }
 
-    public Result guessKey(String ciphertext) throws Exception {
+    public CaesarShiftCracker.Result guessKey(String ciphertext) throws Exception {
         return this.guessKey(this.alphabet.computeProbabilities(ciphertext));
     }
 
-    public Result guessKey(double[] props) throws Exception {
+    public CaesarShiftCracker.Result guessKey(double[] probs) throws Exception {
         int bestShift = 0;
         double bestDelta = Double.MAX_VALUE;
 
