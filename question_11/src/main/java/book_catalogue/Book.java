@@ -87,7 +87,7 @@ public class Book implements Comparable<Book> {
     public Object getField(Field field) {
         switch (field) {
             case ID:
-                return new Integer(this.id);
+                return this.id;
             case TITLE:
                 return this.title;
             case AUTHOR_FIRST_NAME:
