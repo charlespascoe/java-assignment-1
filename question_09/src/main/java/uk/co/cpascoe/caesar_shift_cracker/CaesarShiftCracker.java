@@ -29,7 +29,7 @@ public class CaesarShiftCracker {
         double bestDelta = Double.MAX_VALUE;
 
         for (int i = 0; i < this.alphabet.length(); i++) {
-            double delta = this.getFrequencyDelta(i, probs);
+            double delta = this.computeProbabilityDelta(i, probs);
 
             if (delta < bestDelta) {
                 bestDelta = delta;
@@ -40,7 +40,7 @@ public class CaesarShiftCracker {
         return new CaesarShiftCracker.Result(bestShift, bestDelta);
     }
 
-    private double getFrequencyDelta(int displacement, double[] observedProbabilities) throws Exception {
+    private double computeProbabilityDelta(int displacement, double[] observedProbabilities) throws Exception {
         double[] expectedProbabilities = this.alphabet.getExpectedProbabilities();
 
         if (expectedProbabilities.length != observedProbabilities.length) {
