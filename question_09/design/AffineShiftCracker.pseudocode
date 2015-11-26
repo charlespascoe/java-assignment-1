@@ -1,0 +1,43 @@
+MapProbabilities
+    Input: An array of probabilities, and a coefficient
+    Output: The array of probabilities, mapped according to (coefficient * index) Modulo length of probabilities
+
+    Initialise mappedProbabilities = A new array, the length of the input probabilities
+
+    For each index of probabilities
+        mappedProbabilities[coefficient * index Modulo length of probabilities] = probabilities[index]
+    End For
+
+    Return mappedProbabilities
+End
+
+
+GuessKey
+    Input: An input string OR an array of probabilities of each alphabet character
+    Output: The best possible key values, and the probability delta
+
+    If the input is a string
+        Strip all non-alphabetic characters from the string
+        Set probabilities = Compute probabilities of each character
+    End If
+
+    Initialise bestA = 1
+    Initialise bestB = 0
+    Initialise bestDelta = Infinity
+
+    Initialise caesarShiftCracker = A new CaesarShiftCracker, using the specified alphabet
+
+    For each possible inverseA (which are the numbers coprime to the length of the alphabet)
+        Set mappedProbabilities = Call MapProbabilities(probabilities)
+        Set shift, delta = Call GuessKey(mappedProbabilities) on caesarShiftCracker
+
+        If delta < bestDelta
+            Set bestDelta = delta
+            Set bestA = Multiplicative inverse of 'inverseA' Modulo length of alphabet
+            Set bestB = bestA * shift Modulo length of alphabet
+        End
+    End For
+
+    Return bestA, bestB, bestDelta
+End
+

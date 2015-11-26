@@ -1,0 +1,43 @@
+Globals:
+    alphabet: The alphabet of the ciphertext that is to be broken
+
+ComputeProbabilityDelta
+    Input: An array of observed probabilities, and a shift
+    Output: The absolute different between the probabilities, displaced by the provided shift
+
+    Set expectedProbabilities = expected probabilities of the alphabet
+
+    Initialise delta = 0
+
+    For each possible character index in this alphabet
+        Set expectedProbability = expectedProbabilties[index]
+        Set observedProbability = observedProbabilties[index + shift Modulo length of alphabet]
+        Add to delta the absolute difference between expectedProbability and observedProbability
+    End For
+
+    Return delta
+End
+
+GuessKey
+    Input: An input string OR an array of probabilities of each alphabet character
+    Output: The best possible shift, and the probability delta
+
+    If the input is a string
+        Strip all non-alphabetic characters from the string
+        Set probabilities = Compute probabilities of each character
+    End If
+
+    Initialise bestShift = 0
+    Initialise bestDelta = infinity
+    Initialise delta = 0
+
+    For each possible shift
+        Set delta = Call ComputeProbabilityDelta(probabilities, shift)
+        If delta < bestDelta
+            Set bestDelta = delta
+            Set bestShift = shift
+        End If
+    End For
+
+    Return bestShift, bestDelta
+End

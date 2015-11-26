@@ -1,0 +1,37 @@
+Strip To Alphabet
+    Input: An input string
+    Output: A string which contains only characters present in this alphabet
+
+    Initialise outputString = Empty String
+
+    For each character of the input string
+        If the character is in this alphabet
+            Append the character to the output string
+        End If
+    End For
+
+    Return output string
+End
+
+Compute Probabilities
+    Input: An input string (called inputString)
+    Output: An array of probabilities of each character in the alphabet
+
+    Strip all non-alphabet characters from the input string (see above)
+
+    Initialise frequencies to an array of integers, the length of this alphabet
+
+    For each character of the input string
+        Set index to the position the character in this alphabet
+        Increment frequencies[index]
+    End For
+
+    Initialse probabilities to an array of doubles, the length of this alphabet
+
+    For each index in the frequencies array
+        Set probabilities[index] to frequency[index] divided by the length of input string
+    End For
+
+    Return probabilities
+End
+
