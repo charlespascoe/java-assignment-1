@@ -1,0 +1,47 @@
+digraph QueryComponents {
+    QC [label="QueryComponent"];
+    T [label="Token"];
+    TT [label="TextToken"];
+    NT [label="NumericToken"];
+    ST [label="SpecialToken"];
+    C [label="Condition"];
+    LC [label="LogicalCondition"];
+    ATC [label="AlwaysTrueCondition"];
+    NotC [label="NotCondition"];
+    NC [label="NumericCondition"];
+    TC [label="TextCondition"];
+
+    TEC [label="TextEqualCondition"];
+    TCC [label="TextContainsCondition"];
+    NEC [label="NumericEqualCondition"];
+    NLTC [label="NumericLessThanCondition"];
+    NLTEC [label="NumericLessThanOrEqualCondition"];
+    NGTC [label="NumericGreaterThanCondition"];
+    NGTEC [label="NumericGreaterThanOrEqualCondition"];
+
+    // Tokens
+    QC -> T;
+    T -> TT;
+    T -> ST;
+    T -> NT;
+
+    // Conditions
+    QC -> C;
+    C -> TC;
+    C -> NC;
+    C -> LC;
+    C -> ATC;
+    C -> NotC;
+
+    // Text Conditions
+    TC -> TEC;
+    TC -> TCC;
+
+    // Numeric Conditions
+    NC -> NEC;
+    NC -> NLTC;
+    NC -> NLTEC;
+    NC -> NGTC;
+    NC -> NGTEC;
+
+}
