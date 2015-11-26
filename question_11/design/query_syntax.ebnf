@@ -1,0 +1,30 @@
+query = "query ", condition, (optional sort) ;
+
+sort = " sort ", {field, (" asc" | " desc")} ;
+
+sortField = field, (" asc" | " desc") ;
+
+condition = "(", condition, ")"
+    | "not ", condition
+    | condition, " and ", condition
+    | condition, " or ", condition
+    | numeric_condition
+    | text_condition ;
+
+text_condition = text_field, " ", text_comparator, " ", text ;
+numeric_condition = numeric_field, " ", numeric_comparator, " ", number ;
+
+field = text_field | numeric_field ;
+text_field = "name" | author_fields ;
+author_field = "author.", ("first_name" | "second_name") ;
+numeric_field = "publication_year" ;
+
+numeric_comparator = equality_comparator | ">" | "<" | ">=" | "<=" ;
+text_comparator = equality_comparator | contains_comparator ;
+contains_comparator = "~~" ;
+equality_comparator = "==" ;
+
+number = digit, { digit } ;
+digit = "0".."9" ;
+
+text = {"A".."Z"} ;
