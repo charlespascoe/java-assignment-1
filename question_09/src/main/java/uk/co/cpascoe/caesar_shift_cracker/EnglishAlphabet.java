@@ -1,6 +1,5 @@
 package uk.co.cpascoe.caesar_shift_cracker;
 
-
 public class EnglishAlphabet extends Alphabet {
     public EnglishAlphabet() {
         super("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
