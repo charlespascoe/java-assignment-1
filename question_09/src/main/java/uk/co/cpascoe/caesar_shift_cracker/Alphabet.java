@@ -88,4 +88,9 @@ public abstract class Alphabet {
 
         return probs;
     }
+
+    @Override
+    public String toString() {
+        return this.alphabet;
+    }
 }
