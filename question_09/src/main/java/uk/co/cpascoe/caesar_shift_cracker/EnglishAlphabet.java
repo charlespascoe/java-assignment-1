@@ -42,4 +42,9 @@ public class EnglishAlphabet extends Alphabet {
             0.0005995717344753747
         };
     }
+
+    @Override
+    public String toString() {
+        return String.format("English (%s)", super.toString());
+    }
 }
