@@ -9,7 +9,7 @@ public class CaesarShiftCipher {
 
     public String encrypt(String plaintext, int shift) throws Exception {
         if (shift < 0 || shift >= this.alphabet.length()) {
-            throw new Exception("'shift' is out of the valid range");
+            throw new Exception(String.format("A shift of %s is out of the valid range", shift));
         }
 
         StringBuilder str = new StringBuilder();
@@ -25,7 +25,7 @@ public class CaesarShiftCipher {
     }
 
     public String decrypt(String ciphertext, int shift) throws Exception {
-        return this.encrypt(ciphertext, this.alphabet.length() - shift);
+        return this.encrypt(ciphertext, (this.alphabet.length() - shift) % this.alphabet.length());
     }
 }
 
