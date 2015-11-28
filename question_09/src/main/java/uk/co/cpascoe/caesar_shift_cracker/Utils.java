@@ -44,4 +44,19 @@ public class Utils {
     public static int multiplicativeModuloInverse(int x, int modulus) {
         return Utils.powMod(x, Utils.eulerTotient(modulus) - 1, modulus);
     }
+
+    public static String addSpaces(String text, int groupSize) {
+        StringBuilder str = new StringBuilder();
+
+        int counter = 0;
+
+        for (char c : text.toCharArray()) {
+            str.append(c);
+            counter = (counter + 1) % groupSize;
+
+            if (counter == 0) str.append(" ");
+        }
+
+        return str.toString();
+    }
 }
