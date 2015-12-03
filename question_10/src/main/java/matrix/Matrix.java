@@ -84,6 +84,29 @@ public class Matrix {
 
     @Override
     public String toString() {
+        int colSize = 1;
+
+        for (int row = 0; row < this.getRowCount(); row++) {
+            for (int col = 0; col < this.getColumnCount(); col++) {
+                String str = this.get(row, column).toString();
+                if (str.length() > colSize) {
+                    colSize = str.length();
+                }
+            }
+        }
+
+        StringBuilder str = new StringBuilder();
+
+        for (int row = 0; row < this.getRowCount(); row++) {
+            str.append("|");
+            for (int col = 0; col < this.getColumnCount(); col++) {
+                if (col > 0) str.append(", ");
+                str.append(Utils.padLeft(this.get(row, column).toString(), colSize));
+            }
+            str.append("|\n");
+        }
+        str.append("+");
+
         return Arrays.deepToString(this.matrix);
     }
 }
