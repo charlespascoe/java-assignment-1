@@ -1,0 +1,18 @@
+Globals:
+    Matrix
+
+Transpose
+    Input: A matrix
+    Output: A matrix representing the transposed version of the input matrix
+
+    Initialise output_matrix = a new Matrix
+
+    For each row index i of the matrix
+        For each column index j of the matrix
+            Set cell_value = value at row i, column j of matrix
+            Set value at row j, column i of output_matrix = cell value
+        End For
+    End For
+
+    Return output_matrix
+End
