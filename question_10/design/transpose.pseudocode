@@ -1,6 +1,3 @@
-Globals:
-    Matrix
-
 Transpose
     Input: A matrix
     Output: A matrix representing the transposed version of the input matrix
