@@ -1,0 +1,141 @@
+digraph UML {
+    fontname = "Bitstream Vera Sans"
+    fontsize = 8
+
+    node [
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+        shape = "record"
+    ]
+
+    edge [
+        arrowhead = "empty"
+        fontname = "Bitstream Vera Sans"
+        fontsize = 8
+    ]
+
+    subgraph clusterQueryPackage {
+        label = "Package book_catalogue.query";
+
+        QueryComponent [
+            label = "{QueryComponent||+ somthing : Type}"
+        ]
+
+        Token [
+            label = "{Token||+ somthing : Type}"
+        ]
+
+        Token -> QueryComponent;
+
+        TextToken [
+            label = "{TextToken||+ somthing : Type}"
+        ]
+
+        TextToken -> Token;
+
+        NumericToken [
+            label = "{NumericToken||+ somthing : Type}"
+        ]
+
+        NumericToken -> Token;
+
+        SpecialToken [
+            label = "{SpecialToken||+ somthing : Type}"
+        ]
+
+        SpecialToken -> Token;
+
+        Condition [
+            label = "{Condition||+ somthing : Type}"
+        ]
+
+        Condition -> QueryComponent;
+
+        TextCondition [
+            label = "{TextCondition||+ somthing : Type}"
+        ]
+
+        TextCondition -> Condition;
+
+        NumericCondition [
+            label = "{NumericCondition||+ somthing : Type}"
+        ]
+
+        NumericCondition -> Condition;
+
+        LogicalCondition [
+            label = "{LogicalCondition||+ somthing : Type}"
+        ]
+
+        LogicalCondition -> Condition;
+
+        AlwaysTrueCondition [
+            label = "{AlwaysTrueCondition||+ somthing : Type}"
+        ]
+
+        AlwaysTrueCondition -> Condition;
+
+        NotCondition [
+            label = "{NotCondition||+ somthing : Type}"
+        ]
+
+        NotCondition -> Condition;
+
+        Query [
+            label = "{Query||+ somthing : Type}"
+        ]
+
+        QueryBuilder [
+            label = "{QueryBuilder||+ somthing : Type}"
+        ]
+
+        Sorter [
+            label = "{Sorter||+ something : Type}"
+        ]
+
+        edge [
+            arrowhead = "normal"
+            style = "dotted"
+        ]
+
+        QueryBuilder -> TextCondition;
+        QueryBuilder -> NumericCondition;
+        QueryBuilder -> LogicalCondition;
+        QueryBuilder -> AlwaysTrueCondition;
+        QueryBuilder -> NotCondition;
+        QueryBuilder -> SpecialToken;
+        QueryBuilder -> NumericToken;
+        QueryBuilder -> TextToken;
+        QueryBuilder -> Query;
+        QueryBuilder -> Sorter;
+
+    }
+
+    Matcher [
+        label = "{Matcher||+ somethng : Type}"
+    ]
+
+    Book [
+        label = "{Book||+ something : Type}"
+    ]
+
+    BookCatalogue [
+        label = "{BookCatalogue||+ something : Type}"
+    ]
+
+    Program [
+        label = "{Program||+ something : Type}"
+    ]
+
+    edge [
+        arrowhead = "normal"
+        style = "dotted"
+    ]
+
+    Program -> BookCatalogue;
+    BookCatalogue -> Matcher;
+    BookCatalogue -> Book;
+    Program -> QueryBuilder;
+    Program -> Query;
+    Program -> Sorter;
+}
