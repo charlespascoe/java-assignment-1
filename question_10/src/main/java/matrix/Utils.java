@@ -6,17 +6,17 @@ public class Utils {
     }
 
     public static String padLeft(String str, int length, char padding) {
-        StringBuilder output = new StringBuilder();
-
-        while (output.length() + str.length() < length) {
-            output.append(padding);
-        }
-
-        output.append(str);
-
-        return output.toString();
+        return Utils.repeat(padding, length - str.length()) + str;
     }
 
-    public static String repeat(char c, int times
+    public static String repeat(char c, int times) {
+        StringBuilder str = new StringBuilder();
+
+        for (int i = 0; i < times; i++) {
+            str.append(c);
+        }
+
+        return str.toString();
+    }
 }
 
