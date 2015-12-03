@@ -88,7 +88,7 @@ public class Matrix {
 
         for (int row = 0; row < this.getRowCount(); row++) {
             for (int col = 0; col < this.getColumnCount(); col++) {
-                String str = this.get(row, column).toString();
+                String str = this.get(row, col).toString();
                 if (str.length() > colSize) {
                     colSize = str.length();
                 }
@@ -97,17 +97,26 @@ public class Matrix {
 
         StringBuilder str = new StringBuilder();
 
+        char topLeftCorner = '\u250F';
+        char topRightCorner = '\u2513';
+        char bottomLeftCorner = '\u2517';
+        char bottomRightCorner = '\u251B';
+        char verticalPipe = '\u2503';
+
+        String gap = Utils.repeat(' ', (colSize + 2) * this.getColumnCount() - 2);
+
+        str.append(topLeftCorner).append(gap).append(topRightCorner).append('\n');
         for (int row = 0; row < this.getRowCount(); row++) {
-            str.append("|");
+            str.append(verticalPipe);
             for (int col = 0; col < this.getColumnCount(); col++) {
                 if (col > 0) str.append(", ");
-                str.append(Utils.padLeft(this.get(row, column).toString(), colSize));
+                str.append(Utils.padLeft(this.get(row, col).toString(), colSize));
             }
-            str.append("|\n");
+            str.append(verticalPipe).append('\n');
         }
-        str.append("+");
+        str.append(bottomLeftCorner).append(gap).append(bottomRightCorner).append('\n');
 
-        return Arrays.deepToString(this.matrix);
+        return str.toString();
     }
 }
 
