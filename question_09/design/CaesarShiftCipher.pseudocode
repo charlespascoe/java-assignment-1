@@ -1,0 +1,28 @@
+Encrypt
+    Input: An alphabet, some input text, and a shift
+    Output: A string of alphabet characters, encrypted using the caesar shift cipher with the provided shift
+
+    Set output = A new empty string
+
+    Set shift = shift Modulo alphabet length
+
+    For each character of the input string
+        If the character is in the alphabet
+            Set characterIndex = index of character in alphabet
+            Set encryptedCharacterIndex = (characterIndex + shift) Modulo alphabet length
+            Append alphabet[encryptedCharacterIndex] to the output
+        End
+    End
+
+    Return output
+End
+
+Decrypt
+    Input: An alphabet, some ciphertext, and the shift used to encrypt the ciphertext
+    Output: The string of plaintext characters
+
+    Set inverseShift = 0 - shift
+    Set plaintext = Call Encrypt(alphabet, ciphertext, inverseShift)
+    Return plaintext
+End
+
