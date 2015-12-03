@@ -15,6 +15,8 @@ public class Matrix {
     }
 
     public static boolean isValidMatrix(Number[][] m) {
+        if (m == null) return false;
+
         // A matrix must have at least 1 row and 1 column
         if (m.length == 0 || m[0].length == 0) {
             return false;
