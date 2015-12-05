@@ -34,9 +34,9 @@ public abstract class Alphabet {
      *
      * @param index the index of the character in this alphabet
      */
-    public char getChar(int index) throws Exception {
-        if (index < 0 || index >= this.alphabet.length()) {
-            throw new Exception("Array index out of bounds!");
+    public char getChar(int index) {
+        if (index < 0 || index >= this.length()) {
+            throw new IndexOutOfBoundsException("Character index of " + Integer.toString(index) + " out of bounds");
         }
 
         return this.alphabet.charAt(index);
@@ -51,7 +51,7 @@ public abstract class Alphabet {
         StringBuilder str = new StringBuilder();
 
         for (char c : text.toCharArray()) {
-            if (this.alphabet.indexOf((int)c) >= 0) {
+            if (this.indexOf(c) >= 0) {
                 str.append(c);
             }
         }
@@ -72,9 +72,9 @@ public abstract class Alphabet {
     public double[] computeProbabilities(String text) {
         text = this.stripToAlphabet(text);
 
-        //TODO: Check that text.length is greater than 0
-
         int[] freqs = new int[this.length()];
+
+        if (text.length() == 0) return freqs;
 
         for (char c : text.toCharArray()) {
             freqs[this.indexOf(c)]++;
