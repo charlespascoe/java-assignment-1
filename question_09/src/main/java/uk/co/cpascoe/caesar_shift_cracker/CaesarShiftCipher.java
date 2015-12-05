@@ -7,15 +7,12 @@ public class CaesarShiftCipher {
         this.alphabet = alphabet;
     }
 
-    public String encrypt(String plaintext, int shift) throws Exception {
-        if (shift < 0 || shift >= this.alphabet.length()) {
-            throw new Exception(String.format("A shift of %s is out of the valid range", shift));
-        }
-
+    public String encrypt(String plaintext, int shift) {
         StringBuilder str = new StringBuilder();
 
         int len = this.alphabet.length();
-        shift = shift % len;
+
+        shift = Utils.absoluteModulo(shift, len);
 
         for (char c : this.alphabet.stripToAlphabet(plaintext).toCharArray()) {
             str.append(this.alphabet.getChar((this.alphabet.indexOf(c) + shift) % len));
@@ -24,8 +21,8 @@ public class CaesarShiftCipher {
         return str.toString();
     }
 
-    public String decrypt(String ciphertext, int shift) throws Exception {
-        return this.encrypt(ciphertext, (this.alphabet.length() - shift) % this.alphabet.length());
+    public String decrypt(String ciphertext, int shift) {
+        return this.encrypt(ciphertext, this.alphabet.length() - shift);
     }
 }
 
