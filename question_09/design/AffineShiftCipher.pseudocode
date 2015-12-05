@@ -1,0 +1,31 @@
+Encrypt
+    Input: An alphabet, some input text, a coefficient A, and a shift B
+    Output: A string of alphabet characters, encrypted using the affie shift cipher with the provided key
+
+    Set output = A new empty string
+
+    If A is not coprime to alphabet length
+        Throw an Exception
+    End
+
+    For each character of the input string
+        If the character is in the alphabet
+            Set characterIndex = index of character in alphabet
+            Set encryptedCharacterIndex = (A * characterIndex + B) Modulo alphabet length
+            Append alphabet[encryptedCharacterIndex] to the output
+        End
+    End
+
+    Return output
+End
+
+Decrypt
+    Input: An alphabet, some ciphertext, and the coefficient and shift used to encrypt the ciphertext
+    Output: The string of plaintext characters
+
+    Set decryptionA = Multiplicative inverse of the coefficient Modulo length of alphabet
+    Set decryptionB = 0 - (decryptionA * shift)
+    Set plaintext = Call Encrypt(alphabet, ciphertext, decryptionA, decryptionAB)
+    Return platext
+End
+
