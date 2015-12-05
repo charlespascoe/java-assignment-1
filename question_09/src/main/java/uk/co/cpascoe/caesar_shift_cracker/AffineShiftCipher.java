@@ -7,22 +7,17 @@ public class AffineShiftCipher {
         this.alphabet = alphabet;
     }
 
-    public String encrypt(String plaintext, int a, int b) throws Exception {
-        if (a < 0 || a >= this.alphabet.length()) {
-            throw new Exception("'a' out of valid range" + Integer.toString(a));
-        }
+    public String encrypt(String plaintext, int a, int b) throws InvalidKeyException {
+        int modulus = this.alphabet.length();
 
-        if (b < 0 || b >= this.alphabet.length()) {
-            throw new Exception("'b' out of valid range: " + Integer.toString(b));
-        }
+        a = Utils.absoluteModulo(a, modulus);
+        b = Utils.absoluteModulo(b, modulus);
 
-        if (Utils.gcd(a, this.alphabet.length()) != 1) {
-            throw new Exception("'a' must be coprime to the length of the alphabet: " + Integer.toString(a));
+        if (Utils.gcd(a, modulus) != 1) {
+            throw new InvalidKeyException("a", a, "expected a number coprime to " + Integer.toString(this.alphabet.length()));
         }
 
         StringBuilder str = new StringBuilder();
-
-        int modulus = this.alphabet.length();
 
         for (char c : this.alphabet.stripToAlphabet(plaintext).toCharArray()) {
             str.append(this.alphabet.getChar((a * this.alphabet.indexOf(c) + b) % modulus));
@@ -31,7 +26,7 @@ public class AffineShiftCipher {
         return str.toString();
     }
 
-    public String decrypt(String ciphertext, int a, int b) throws Exception {
+    public String decrypt(String ciphertext, int a, int b) throws InvalidKeyException {
         int modulus = this.alphabet.length();
         int inverseA = Utils.multiplicativeModuloInverse(a, modulus);
         int minusInverseAB = (modulus - ((inverseA * b) % modulus)) % modulus;
