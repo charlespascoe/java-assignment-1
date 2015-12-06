@@ -152,5 +152,29 @@ public class Book implements Comparable<Book> {
 
         return str.toString();
     }
+
+    public String displayInfo() {
+        StringBuilder str = new StringBuilder();
+
+        str.append("Book ID: ").append(this.id).append("\n");
+        str.append("Title: ").append(this.title).append("\n");
+
+        if (this.authors.length == 1) {
+            str.append("Author: ").append(this.authors[0].getFullName()).append("\n");
+        } else {
+            str.append("Authors:\n");
+
+            for (Author author : this.authors) {
+                str.append("    ").append(author.getFullName()).append("\n");
+            }
+        }
+
+        str.append("Publisher: ").append(this.publisher).append("\n");
+        str.append("Publication Year: ").append(this.publicationYear).append("\n");
+        str.append("Status: ").append(this.status.name()).append("\n");
+        str.append("Reference: ").append(this).append("\n");
+
+        return str.toString();
+    }
 }
 
