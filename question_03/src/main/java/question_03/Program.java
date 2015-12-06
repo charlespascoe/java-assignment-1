@@ -9,6 +9,7 @@ public class Program {
     public static void main(String[] args) {
         Console console = System.console();
 
+        // console is null when the program is not running in interactive mode, and so there can't be user input
         if (console == null) return;
 
         String inputLine = console.readLine("Please enter some decimal numbers, separated by spaces: ");
