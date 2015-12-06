@@ -7,6 +7,10 @@ repositories {
     mavenCentral()
 }
 
+dependencies {
+    compile 'com.google.code.gson:gson:2.5'
+}
+
 jar {
     baseName = 'book_calatlogue'
     version =  '0.0.1'
