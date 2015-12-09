@@ -1,37 +1,27 @@
-package uk.co.cpascoe.caesar_shift_cracker;
+package cipher_cracker;
 
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import javax.swing.JTextArea;
-import net.miginfocom.swing.MigLayout;
-import javax.swing.border.BevelBorder;
-import javax.swing.JButton;
-import javax.swing.UIManager;
-import javax.swing.AbstractAction;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
-import javax.swing.Action;
-import javax.swing.JLabel;
-import java.awt.Font;
-import com.jgoodies.forms.layout.FormLayout;
-import com.jgoodies.forms.layout.ColumnSpec;
-import com.jgoodies.forms.layout.FormSpecs;
-import com.jgoodies.forms.layout.RowSpec;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
-import javax.swing.BoxLayout;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JSplitPane;
-import javax.swing.JSlider;
-import javax.swing.SwingConstants;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 import java.awt.event.ActionListener;
 
-public class CaesarShiftCrackerWindow {
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSlider;
+import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.BevelBorder;
+
+public class CaesarShiftWindow {
 
 	private JFrame frmCaesarShift;
 	private final Action encrypt = new EncryptAction();
@@ -55,8 +45,10 @@ public class CaesarShiftCrackerWindow {
 			@Override
 			public void run() {
 				try {
-					CaesarShiftCrackerWindow window = new CaesarShiftCrackerWindow();
+					CaesarShiftWindow window = new CaesarShiftWindow();
+					AffineShiftWindow aw = new AffineShiftWindow();
 					window.frmCaesarShift.setVisible(true);
+                    aw.show();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -67,7 +59,7 @@ public class CaesarShiftCrackerWindow {
 	/**
 	 * Create the application.
 	 */
-	public CaesarShiftCrackerWindow() {
+	public CaesarShiftWindow() {
 		initialize();
 	}
 
@@ -79,7 +71,7 @@ public class CaesarShiftCrackerWindow {
 		frmCaesarShift.setResizable(false);
 		frmCaesarShift.setTitle("Caesar Shift");
 		frmCaesarShift.setBounds(100, 100, 685, 481);
-		frmCaesarShift.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frmCaesarShift.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		JPanel panel = new JPanel();
 		frmCaesarShift.getContentPane().add(panel, BorderLayout.CENTER);
@@ -111,7 +103,11 @@ public class CaesarShiftCrackerWindow {
 		panel_1.setLayout(new BorderLayout(0, 0));
 
 		this.txtrPlaintext = new JTextArea();
-		panel_1.add(this.txtrPlaintext);
+		txtrPlaintext.setLineWrap(true);
+		txtrPlaintext.setWrapStyleWord(true);
+		JScrollPane plaintextScrollPane = new JScrollPane(this.txtrPlaintext);
+		plaintextScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		panel_1.add(plaintextScrollPane);
 
 		JPanel panel_4 = new JPanel();
 		panel_4.setBorder(null);
@@ -132,7 +128,11 @@ public class CaesarShiftCrackerWindow {
 		panel_2.setLayout(new BorderLayout(0, 0));
 
 		this.txtrCiphertext = new JTextArea();
-		panel_2.add(this.txtrCiphertext, BorderLayout.CENTER);
+		txtrCiphertext.setWrapStyleWord(true);
+		txtrCiphertext.setLineWrap(true);
+		JScrollPane ciphertextScrollPane = new JScrollPane(this.txtrCiphertext);
+		ciphertextScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		panel_2.add(ciphertextScrollPane);
 
 		JLabel lblAlphabet = new JLabel("Alphabet");
 		lblAlphabet.setBounds(10, 11, 46, 14);
@@ -151,9 +151,9 @@ public class CaesarShiftCrackerWindow {
 		this.alphabetComboBox = new JComboBox<Alphabet>();
 		this.alphabetComboBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				Alphabet alph = (Alphabet)CaesarShiftCrackerWindow.this.alphabetComboBox.getSelectedItem();
-				CaesarShiftCrackerWindow.this.shiftSlider.setMaximum(alph.length() - 1);
-				CaesarShiftCrackerWindow.this.shiftSlider.setValue(0);
+				Alphabet alph = (Alphabet)CaesarShiftWindow.this.alphabetComboBox.getSelectedItem();
+				CaesarShiftWindow.this.shiftSlider.setMaximum(alph.length() - 1);
+				CaesarShiftWindow.this.shiftSlider.setValue(0);
 			}
 		});
 		this.alphabetComboBox.setBounds(66, 8, 603, 20);
@@ -177,15 +177,15 @@ public class CaesarShiftCrackerWindow {
 			putValue(SHORT_DESCRIPTION, "Encrypt the text");
 		}
 		public void actionPerformed(ActionEvent e) {
-			int shift = CaesarShiftCrackerWindow.this.shiftSlider.getValue();
-			String plaintext = CaesarShiftCrackerWindow.this.txtrPlaintext.getText();
-            Alphabet alph = (Alphabet)CaesarShiftCrackerWindow.this.alphabetComboBox.getSelectedItem();
+			int shift = CaesarShiftWindow.this.shiftSlider.getValue();
+			String plaintext = CaesarShiftWindow.this.txtrPlaintext.getText();
+            Alphabet alph = (Alphabet)CaesarShiftWindow.this.alphabetComboBox.getSelectedItem();
 
             try {
                 CaesarShiftCipher caesarShiftCipher = new CaesarShiftCipher(alph);
                 String ciphertext = caesarShiftCipher.encrypt(plaintext, shift);
 
-                CaesarShiftCrackerWindow.this.txtrCiphertext.setText(Utils.addSpaces(ciphertext, 5));
+                CaesarShiftWindow.this.txtrCiphertext.setText(Utils.addSpaces(ciphertext, 5));
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -198,15 +198,15 @@ public class CaesarShiftCrackerWindow {
 			putValue(SHORT_DESCRIPTION, "Decrypt the text");
 		}
 		public void actionPerformed(ActionEvent e) {
-			int shift = CaesarShiftCrackerWindow.this.shiftSlider.getValue();
-			String ciphertext = CaesarShiftCrackerWindow.this.txtrCiphertext.getText().replace(" ", "");
-            Alphabet alph = (Alphabet)CaesarShiftCrackerWindow.this.alphabetComboBox.getSelectedItem();
+			int shift = CaesarShiftWindow.this.shiftSlider.getValue();
+			String ciphertext = CaesarShiftWindow.this.txtrCiphertext.getText().replace(" ", "");
+            Alphabet alph = (Alphabet)CaesarShiftWindow.this.alphabetComboBox.getSelectedItem();
 
             try {
                 CaesarShiftCipher caesarShiftCipher = new CaesarShiftCipher(alph);
                 String plaintext = caesarShiftCipher.decrypt(ciphertext, shift);
 
-                CaesarShiftCrackerWindow.this.txtrPlaintext.setText(plaintext);
+                CaesarShiftWindow.this.txtrPlaintext.setText(plaintext);
             } catch (Exception ex) {
                 System.out.println(ex);
             }
@@ -219,8 +219,8 @@ public class CaesarShiftCrackerWindow {
 			putValue(SHORT_DESCRIPTION, "Guess the shift of the provided ciphertext");
 		}
 		public void actionPerformed(ActionEvent e) {
-			String ciphertext = CaesarShiftCrackerWindow.this.txtrCiphertext.getText();
-            Alphabet alph = (Alphabet)CaesarShiftCrackerWindow.this.alphabetComboBox.getSelectedItem();
+			String ciphertext = CaesarShiftWindow.this.txtrCiphertext.getText();
+            Alphabet alph = (Alphabet)CaesarShiftWindow.this.alphabetComboBox.getSelectedItem();
 
             try {
                 CaesarShiftCracker caesarShiftCracker = new CaesarShiftCracker(alph);
@@ -229,8 +229,8 @@ public class CaesarShiftCrackerWindow {
                 CaesarShiftCipher caesarShiftCipher = new CaesarShiftCipher(alph);
                 String plaintext = caesarShiftCipher.decrypt(ciphertext, guessedShift);
 
-                CaesarShiftCrackerWindow.this.shiftSlider.setValue(guessedShift);
-                CaesarShiftCrackerWindow.this.txtrPlaintext.setText(plaintext);
+                CaesarShiftWindow.this.shiftSlider.setValue(guessedShift);
+                CaesarShiftWindow.this.txtrPlaintext.setText(plaintext);
             } catch (Exception ex) {
                 System.out.println(ex);
             }
