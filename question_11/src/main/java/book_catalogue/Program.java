@@ -49,10 +49,27 @@ public class Program {
 
             if (input == null) return;
 
+            // Print newline after user input
+            console.printf("%n");
+
             if (input.toLowerCase().equals("quit")) {
                 break;
             } else if (input.toLowerCase().equals("help")) {
-                console.printf("No help yet!!!%n%n%n");
+                StringBuilder str = new StringBuilder();
+                str.append("The commands are:\n")
+                   .append("show <Book ID>\n")
+                   .append("    Shows information about a book\n")
+                   .append("checkout <Book ID>\n")
+                   .append("    Check out a book\n")
+                   .append("checkin <Book ID>\n")
+                   .append("    Check in a book\n")
+                   .append("remove <Book ID>\n")
+                   .append("    Remove a book from the catalogue\n")
+                   .append("query <query>\n")
+                   .append("    Display a list of books, selected according to the provided query.\n\n");
+
+                str.append("For query syntax, please see Assignment Document.\n");
+                console.printf(str.toString());
             } else if (!input.equals("")) {
                 String[] arr = input.split("\\s+", 2);
                 String action = arr[0];
