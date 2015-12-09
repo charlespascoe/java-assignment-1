@@ -24,7 +24,7 @@ public class Booking {
     public int getNumberOfPeople() { return this.numberOfPeople; }
 
     public boolean dateCollidesWithBooking(Calendar date) {
-        return this.startDate.after(date) && this.endDate.before(date);
+        return date.after(this.startDate) && date.before(this.endDate);
     }
 
     public int getPrice() {
