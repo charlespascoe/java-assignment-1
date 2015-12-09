@@ -61,20 +61,6 @@ public class Utils {
         return l;
     }
 
-    public static <E> void spliceIntoList(List<E> list, int startIndex, int endIndex, E replacementElement) {
-        LinkedList<E> l = new LinkedList<E>();
-        l.add(replacementElement);
-        Utils.spliceIntoList(list, startIndex, endIndex, l);
-    }
-
-    public static <E> void spliceIntoList(List<E> list, int startIndex, int endIndex, List<E> replacementElements) {
-        for (int i = startIndex; i < endIndex + 1; i++) {
-            list.remove(startIndex);
-        }
-
-        list.addAll(startIndex, replacementElements);
-    }
-
     public static int compareNumbers(Number n1, Number n2) {
         // Compares two Number objects,
         // using the first object to determine the type to compare by
