@@ -15,7 +15,7 @@ public class Hotel {
         List<Room> availableRooms = new ArrayList<Room>();
 
         for (Room room : this.rooms) {
-            if (room.isAvailable(startDate, endDate) && room.getNumberOfBeds() <= numberOfPeople) {
+            if (room.isAvailable(startDate, endDate) && room.getNumberOfBeds() >= numberOfPeople) {
                 availableRooms.add(room);
             }
         }
