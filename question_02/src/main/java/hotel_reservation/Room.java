@@ -29,13 +29,17 @@ public class Room {
 
     public int getPricePerNight() { return this.pricePerNight; }
 
-    public Booking bookRoom(Calendar startDate, Calendar endDate, int people) {
-        if (!this.isAvailable(startDate, endDate)) {
-            // Throw exception!
+    public Booking bookRoom(Calendar startDate, Calendar endDate, int people) throws IllegalArgumentException, RoomUnavailableException {
+        if (startDate.after(endDate)) {
+            throw new IllegalArgumentException("Start Date must be before End Date");
         }
 
-        if (this.numberOfBeds < people) {
-            // Throw exception!
+        if (people < 1) {
+            throw new IllegalArgumentException("There must be at least 1 person");
+        }
+
+        if (!this.isAvailable(startDate, endDate) || this.numberOfBeds < people) {
+            throw new RoomUnavailableException(this.number, startDate, endDate, people);
         }
 
         Booking booking = new Booking(this, startDate, endDate, people);
@@ -57,6 +61,30 @@ public class Room {
         }
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+
+        str.append(String.format("Room Number: %s%n", this.number));
+        str.append("Number of beds: ").append(this.numberOfBeds).append("\n");
+
+        if (this.features.length > 0) {
+            str.append("Features:\n");
+
+            for (String feature : this.features) {
+                str.append("    ").append(feature).append("\n");
+            }
+        }
+
+        str.append("Bookings:\n");
+
+        for (Booking booking : this.bookings) {
+            str.append("    ").append(booking.toString()).append("\n");
+        }
+
+        return str.toString();
     }
 }
 
