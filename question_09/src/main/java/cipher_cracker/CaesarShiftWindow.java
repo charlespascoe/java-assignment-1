@@ -219,7 +219,7 @@ public class CaesarShiftWindow {
 			putValue(SHORT_DESCRIPTION, "Guess the shift of the provided ciphertext");
 		}
 		public void actionPerformed(ActionEvent e) {
-			String ciphertext = CaesarShiftWindow.this.txtrCiphertext.getText();
+			String ciphertext = CaesarShiftWindow.this.txtrCiphertext.getText().replace(" ", "");
             Alphabet alph = (Alphabet)CaesarShiftWindow.this.alphabetComboBox.getSelectedItem();
 
             try {
