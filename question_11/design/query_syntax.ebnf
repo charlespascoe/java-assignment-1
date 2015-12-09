@@ -1,15 +1,15 @@
 query = "query ", condition, (optional sort) ;
 
-sort = " sort ", {field, (" asc" | " desc")} ;
+sort = " sort ", sortField, {", ", sortField} ;
 
 sortField = field, (" asc" | " desc") ;
 
 condition = "(", condition, ")"
+    | text_condition
+    | numeric_condition
     | "not ", condition
     | condition, " and ", condition
-    | condition, " or ", condition
-    | numeric_condition
-    | text_condition ;
+    | condition, " or ", condition;
 
 text_condition = text_field, " ", text_comparator, " ", text ;
 numeric_condition = numeric_field, " ", numeric_comparator, " ", number ;
@@ -25,6 +25,6 @@ contains_comparator = "~~" ;
 equality_comparator = "==" ;
 
 number = digit, { digit } ;
-digit = "0".."9" ;
+digit = "0"-"9" ;
 
-text = {"A".."Z"} ;
+text = {"A"-"Z"} ;
