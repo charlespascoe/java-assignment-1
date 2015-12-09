@@ -28,8 +28,12 @@ public class Booking {
     }
 
     public int getPrice() {
+        return Booking.getPrice(this.startDate, this.endDate, this.room.getPricePerNight());
+    }
+
+    public static int getPrice(Calendar startDate, Calendar endDate, int pricePerNight) {
         // Number of Days - 1 = Number of Nights
-        return (Utils.daysBetweenDates(this.startDate, this.endDate) - 1) * this.room.getPricePerNight();
+        return (Utils.daysBetweenDates(startDate, endDate) - 1) * pricePerNight;
     }
 
     @Override
