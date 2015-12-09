@@ -1,4 +1,4 @@
-package uk.co.cpascoe.caesar_shift_cracker;
+package cipher_cracker;
 
 public class AffineShiftCracker {
     public static class Result {

@@ -1,4 +1,4 @@
-package uk.co.cpascoe.caesar_shift_cracker;
+package cipher_cracker;
 
 //import java.lang.IllegalArgumentException;
 

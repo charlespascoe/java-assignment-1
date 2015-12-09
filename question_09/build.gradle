@@ -1,7 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
-mainClassName = 'uk.co.cpascoe.caesar_shift_cracker.CaesarShiftCrackerWindow'
+mainClassName = 'cipher_cracker.CaesarShiftWindow'
 
 repositories {
     mavenCentral()
@@ -13,10 +13,10 @@ dependencies {
 }
 
 jar {
-    baseName = 'caesar_shift_cracker'
+    baseName = 'cipher_cracker'
     version =  '0.0.1'
     manifest {
-        attributes 'Main-Class': 'uk.co.cpascoe.caesar_shift_cracker.CaesarShiftCrackerWindow'
+        attributes 'Main-Class': 'cipher_cracker.CaesarShiftWindow'
     }
 }
 

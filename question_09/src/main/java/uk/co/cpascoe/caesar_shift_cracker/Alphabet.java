@@ -1,4 +1,4 @@
-package uk.co.cpascoe.caesar_shift_cracker;
+package cipher_cracker;
 
 
 public abstract class Alphabet {
@@ -73,14 +73,13 @@ public abstract class Alphabet {
         text = this.stripToAlphabet(text);
 
         int[] freqs = new int[this.length()];
+        double[] probs = new double[freqs.length];
 
-        if (text.length() == 0) return freqs;
+        if (text.length() == 0) return probs;
 
         for (char c : text.toCharArray()) {
             freqs[this.indexOf(c)]++;
         }
-
-        double[] probs = new double[freqs.length];
 
         for (int i = 0; i < freqs.length; i++) {
             probs[i] = (double)freqs[i] / text.length();
