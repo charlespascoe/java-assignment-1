@@ -1,5 +1,7 @@
 package hotel_reservation;
 
+import java.util.Calendar;
+
 public class Booking {
     private Room room;
     private Calendar startDate;
@@ -28,6 +30,21 @@ public class Booking {
     public int getPrice() {
         // Number of Days - 1 = Number of Nights
         return (Utils.daysBetweenDates(this.startDate, this.endDate) - 1) * this.room.getPricePerNight();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder str = new StringBuilder();
+
+        str.append(Utils.formatDate(this.startDate)).append(" to ").append(Utils.formatDate(this.endDate)).append(", ").append(this.numberOfPeople);
+
+        if (this.numberOfPeople == 1) {
+            str.append(" person");
+        } else {
+            str.append(" people");
+        }
+
+        return str.toString();
     }
 }
 
