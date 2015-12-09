@@ -48,6 +48,8 @@ public class Booking {
             str.append(" people");
         }
 
+        str.append(" (£").append(this.getPrice()).append(")");
+
         return str.toString();
     }
 }
