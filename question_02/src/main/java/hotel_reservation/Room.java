@@ -12,10 +12,10 @@ public class Room {
     private int pricePerNight;
     private List<Booking> bookings;
 
-    public Room(int number, int numberOfBeds, String[] features, int pricePerNight) {
+    public Room(int number, int numberOfBeds, int pricePerNight, String... features) {
         this.number = number;
         this.numberOfBeds = numberOfBeds;
-        this.features = Arrays.copyOf(features);
+        this.features = Utils.cloneArray(features);
         this.pricePerNight = pricePerNight;
 
         this.bookings = new ArrayList<Booking>();
@@ -25,7 +25,7 @@ public class Room {
 
     public int getNumberOfBeds() { return this.numberOfBeds; }
 
-    public String[] getFeatures() { return Arrays.copyOf(this.features); }
+    public String[] getFeatures() { return Utils.cloneArray(this.features); }
 
     public int getPricePerNight() { return this.pricePerNight; }
 
@@ -34,17 +34,23 @@ public class Room {
             // Throw exception!
         }
 
+        if (this.numberOfBeds < people) {
+            // Throw exception!
+        }
+
         Booking booking = new Booking(this, startDate, endDate, people);
         this.bookings.add(booking);
         return booking;
     }
 
-    public int removeBooking(Booking booking) {
-        this.bookings.remove(bookings);
+    public void removeBooking(Booking booking) {
+        if (this.bookings.contains(booking)) {
+            this.bookings.remove(booking);
+        }
     }
 
     public boolean isAvailable(Calendar startDate, Calendar endDate) {
-        for (Booking booking : this.booking) {
+        for (Booking booking : this.bookings) {
             if (booking.dateCollidesWithBooking(startDate) || booking.dateCollidesWithBooking(endDate)) {
                 return false;
             }
