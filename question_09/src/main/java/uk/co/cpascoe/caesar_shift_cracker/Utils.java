@@ -1,4 +1,4 @@
-package uk.co.cpascoe.caesar_shift_cracker;
+package cipher_cracker;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -17,13 +17,13 @@ public class Utils {
      * Computes Euler's totient of 'x' (number of numbers modulo 'x' coprime to 'x')
      */
     public static int eulerTotient(int x) {
-        return Utils.getCoprimes(x).size();
+        return Utils.getCoprimes(x).length;
     }
 
     /**
      * Computes the list of coprimes of x modulo x
      */
-    public static List<Integer> getCoprimes(int x) {
+    public static Integer[] getCoprimes(int x) {
         List<Integer> coprimes = new ArrayList<Integer>();
 
         for (int i = 1; i < x; i++) {
@@ -32,7 +32,17 @@ public class Utils {
             }
         }
 
-        return coprimes;
+        return coprimes.toArray(new Integer[0]);
+    }
+
+    public static Integer[] getIntegers(int x) {
+        List<Integer> ints = new ArrayList<Integer>();
+
+        for (int i = 0; i < x; i++) {
+            ints.add(i);
+        }
+
+        return ints.toArray(new Integer[0]);
     }
 
     /**
