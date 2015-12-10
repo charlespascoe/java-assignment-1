@@ -2,13 +2,13 @@ Encrypt
     Input: An alphabet, some input text, and a shift
     Output: A string of alphabet characters, encrypted using the caesar shift cipher with the provided shift
 
-    Set output = A new empty string
+    Set output = Empty string
 
     Set shift = shift Modulo alphabet length
 
     For each character of the input string
         If the character is in the alphabet
-            Set characterIndex = index of character in alphabet
+            Set characterIndex = Index of character in alphabet
             Set encryptedCharacterIndex = (characterIndex + shift) Modulo alphabet length
             Append alphabet[encryptedCharacterIndex] to the output
         End

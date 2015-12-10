@@ -31,5 +31,10 @@ public class NumericToken extends Token {
     public boolean equals(Object obj) {
         return obj instanceof NumericToken && super.equals(obj);
     }
+
+    @Override
+    public String toString() {
+        return "numeric token";
+    }
 }
 

@@ -9,5 +9,10 @@ public class TextToken extends Token {
     public boolean equals(Object obj) {
         return obj instanceof TextToken && super.equals(obj);
     }
+
+    @Override
+    public String toString() {
+        return "text token";
+    }
 }
 

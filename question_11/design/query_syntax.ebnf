@@ -1,4 +1,4 @@
-query = "query ", condition, (optional sort) ;
+query = condition, [sort] ;
 
 sort = " sort ", sortField, {", ", sortField} ;
 
@@ -15,7 +15,7 @@ text_condition = text_field, " ", text_comparator, " ", text ;
 numeric_condition = numeric_field, " ", numeric_comparator, " ", number ;
 
 field = text_field | numeric_field ;
-text_field = "name" | author_fields ;
+text_field = "id" | "title" | author_field | "publisher" | "status";
 author_field = "author.", ("first_name" | "second_name") ;
 numeric_field = "publication_year" ;
 
@@ -27,4 +27,6 @@ equality_comparator = "==" ;
 number = digit, { digit } ;
 digit = "0"-"9" ;
 
-text = {"A"-"Z"} ;
+text = ? Non-whitespace characters ?
+    | '"', ? Characters except double quotes ? , '"'
+    | "'", ? Characters except single quotes ? , "'" ;

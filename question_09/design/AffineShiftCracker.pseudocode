@@ -1,24 +1,13 @@
-MapProbabilities
-    Input: An array of probabilities, and a coefficient
-    Output: The array of probabilities, mapped according to (coefficient * index) Modulo length of probabilities
-
-    Initialise mappedProbabilities = A new array, the length of the input probabilities
-
-    For each index of probabilities
-        mappedProbabilities[coefficient * index Modulo length of probabilities] = probabilities[index]
-    End For
-
-    Return mappedProbabilities
-End
-
+Globals:
+    alphabet: The alphabet of the ciphertext that is to be broken
 
 GuessKey
     Input: An input string OR an array of probabilities of each alphabet character
     Output: The best possible key values, and the probability delta
 
     If the input is a string
-        Strip all non-alphabetic characters from the string
-        Set probabilities = Compute probabilities of each character
+        Set input = Call alphabet.StripToAlphabet(input)
+        Set probabilities = Call alphabet.ComputeProbabilities(input)
     End If
 
     Initialise bestA = 1
@@ -39,5 +28,18 @@ GuessKey
     End For
 
     Return bestA, bestB, bestDelta
+End
+
+MapProbabilities
+    Input: An array of probabilities, and a coefficient
+    Output: The array of probabilities, mapped according to (coefficient * index) Modulo length of probabilities
+
+    Initialise mappedProbabilities = A new array, the length of the input probabilities
+
+    For each index of probabilities
+        mappedProbabilities[coefficient * index Modulo length of probabilities] = probabilities[index]
+    End For
+
+    Return mappedProbabilities
 End
 

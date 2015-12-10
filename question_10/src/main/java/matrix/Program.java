@@ -10,7 +10,7 @@ public class Program {
                 {7, 8, 9}
             });
 
-            System.out.println("Input matrix: \n" + m.toString());
+            System.out.println("\nInput matrix: \n" + m.toString());
             System.out.println("Transposed matrix: \n" + m.transpose().toString());
 
             Matrix m2 = new Matrix(new Number[][] {
@@ -19,6 +19,15 @@ public class Program {
             });
             System.out.println("\nInput matrix:\n" + m2.toString());
             System.out.println("Transposed matrix:\n" + m2.transpose().toString());
+
+            Matrix m3 = new Matrix(new Number[][] {
+                {8, 0},
+                {777, 34},
+                {91, 0.93},
+                {81, 81}
+            });
+            System.out.println("\nInput matrix:\n" + m3.toString());
+            System.out.println("Transposed matrix:\n" + m3.transpose().toString());
         } catch (Exception ex) {
             System.err.println(ex);
         }

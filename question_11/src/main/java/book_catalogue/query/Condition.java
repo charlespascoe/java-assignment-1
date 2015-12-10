@@ -9,5 +9,10 @@ public abstract class Condition extends QueryComponent implements Matcher<Book> 
     }
 
     public abstract boolean isMatch(Book book);
+
+    @Override
+    public String toString() {
+        return "condition";
+    }
 }
 

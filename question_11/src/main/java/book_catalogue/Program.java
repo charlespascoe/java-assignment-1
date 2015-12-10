@@ -12,8 +12,7 @@ public class Program {
         BookCatalogue books = new BookCatalogue();
         if (!books.load()) return;
 
-        System.out.println(books.size());
-
+        // Some additional books added programmatically, for examples
         books.add(new Book("#000042", "The Hitchhiker's Guide to the Galaxy", new Author("Douglas", "Adams"), "Megadodo Publications", 1979, BookStatus.AVAILABLE));
         books.add(new Book("#065537", "Applied Cryptography", new Author("Bruce", "Schneier"), "John Wiley & Sons", 1994, BookStatus.ON_LOAN));
         books.add(new Book(
